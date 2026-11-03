@@ -105,8 +105,28 @@ try {
 			$path = get_template_directory() . '/assets/fonts/' . $family . '/' . rawurldecode( basename( $url ) );
 			$githeme_check( is_file( $path ) && 'wOF2' === file_get_contents( $path, false, null, 0, 4 ), 'Missing/invalid WOFF2 asset.' );
 		}
-		$editor = apply_filters( 'tiny_mce_before_init', array( 'content_style' => '.existing{color:inherit;}' ), 'content' );
-		$githeme_check( str_contains( $editor['content_style'], '.existing{color:inherit;}' ) && str_contains( $editor['content_style'], githeme_custom_properties_css() ), 'Editor CSS was not preserved/aligned.' );
+		// Names containing spaces must remain quoted CSS strings in both editors.
+		$font_names = array(
+			'system' => 'Segoe UI',
+			'source-sans-3' => 'Source Sans 3',
+			'source-serif-4' => 'Source Serif 4',
+			'atkinson-hyperlegible-next' => 'Atkinson Hyperlegible Next',
+		);
+		$existing = '.existing{font-family:"Existing Font";color:inherit;}';
+		$generated = str_replace( '"', "'", $css . githeme_custom_properties_css() );
+		foreach ( array( 'tiny_mce_before_init', 'teeny_mce_before_init' ) as $hook ) {
+			$editor = apply_filters( $hook, array( 'content_style' => $existing, 'height' => 321 ), 'content' );
+			$githeme_check( $existing . $generated === $editor['content_style'], 'Editor must preserve existing CSS and append the complete adapted theme CSS: ' . $hook );
+			$githeme_check( 321 === $editor['height'], 'Unrelated editor configuration changed.' );
+			$theme_css = substr( $editor['content_style'], strlen( $existing ) );
+			$githeme_check( str_contains( $theme_css, "'" . $font_names[ $family ] . "'" ), 'Font name with spaces lost its CSS quotes: ' . $family );
+			$githeme_check( ! str_contains( $theme_css, '"' ) && ! str_contains( $theme_css, '\\' ) && ! str_contains( $theme_css, '&#' ) && ! str_contains( $theme_css, '&quot;' ), 'Theme editor CSS was double escaped or HTML encoded.' );
+			preg_match_all( "/src:url\\('([^']+)'\\)/", $theme_css, $editor_urls );
+			$githeme_check( $matches[1] === $editor_urls[1], 'Editor font URLs changed or lost valid CSS quoting.' );
+		}
+		$without_style = githeme_editor_settings( array() );
+		$githeme_check( $generated === $without_style['content_style'], 'Missing initial content_style was not supported.' );
+		$githeme_check( $generated === str_replace( '"', "'", $generated ), 'Quote adaptation is not idempotent.' );
 		$font_report[ $family ] = $matches[1];
 	}
 	foreach ( array( 'inline', 'stacked' ) as $layout ) {

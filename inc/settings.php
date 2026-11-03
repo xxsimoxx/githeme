@@ -297,8 +297,14 @@ add_filter( 'body_class', 'githeme_header_body_class' );
 
 /** TinyMCE's public content_style setting supports CSS inside its iframe. */
 function githeme_editor_settings( $settings ) {
-	$settings['content_style'] = ( $settings['content_style'] ?? '' ) . githeme_font_faces_css() . githeme_custom_properties_css();
-	return $settings;
+    $css = githeme_font_faces_css() . githeme_custom_properties_css();
+
+    // Avoid double quotes inside the TinyMCE initialization string.
+    $css = str_replace( '"', "'", $css );
+
+    $settings['content_style'] = ( $settings['content_style'] ?? '' ) . $css;
+
+    return $settings;
 }
 add_filter( 'tiny_mce_before_init', 'githeme_editor_settings' );
 add_filter( 'teeny_mce_before_init', 'githeme_editor_settings' );
