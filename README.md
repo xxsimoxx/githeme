@@ -12,7 +12,7 @@ Tema classico generalista per ClassicPress, in fase iniziale di sviluppo.
 
 - Template classici per pagine, articoli, elenchi, ricerca e pagina 404.
 - Header e footer semantici, menu principale e logo personalizzato.
-- Menu mobile progressivo: senza JavaScript tutti i link restano visibili; sottomenu sempre visibili, senza interazioni basate soltanto sul passaggio del mouse.
+- Menu responsive progressivo: il pulsante compare sotto 48rem oppure quando il menu non entra nello spazio dell’header; senza JavaScript tutti i link restano visibili. I sottomenu rimangono visibili, senza interazioni basate soltanto sul passaggio del mouse.
 - CSS responsive con custom properties, focus visibile e collegamento per saltare al contenuto.
 - Immagini in evidenza, titolo documento e feed gestiti dal core; stili per l'editor classico e commenti nativi.
 - Aree widget facoltative `homepage-hero` e `homepage-content` per la homepage statica; `footer-experimental` prima dei crediti.
@@ -151,6 +151,24 @@ Il test browser richiede Selenium già installato, l’ambiente esterno con `COD
 ```
 
 Il percorso dello script è relativo alla directory del tema. Screenshot e risultati vengono salvati nell’area artifacts dell’ambiente esterno, fuori dai repository. Il test server-fallback analizza HTML senza eseguirne gli script; non equivale a una verifica completa del Customizer con JavaScript disattivato. Gli annunci sono verificati come mutazioni DOM, non come parlato di VoiceOver.
+
+## Test della navigazione
+
+Il menu conserva un unico elenco nel DOM, il pulsante nativo con `aria-expanded` e `aria-controls`, e i sottomenu sempre disponibili quando l’elenco è aperto. L’indicatore passa da hamburger a chiusura senza modificare il nome accessibile “Menu”. Escape chiude la navigazione compatta e riporta il focus al pulsante. Il layout centrato con menu sotto considera disponibile l’intera riga; quello in linea considera anche lo spazio dell’identità del sito. Senza JavaScript il menu può andare a capo e tutti i collegamenti restano utilizzabili.
+
+I ricalcoli sono raggruppati tramite `requestAnimationFrame`: `ResizeObserver` osserva header, identità e menu, mentre le variazioni delle classi di layout e delle variabili inline vengono rilevate separatamente. Il completamento del caricamento dei font locali richiede un nuovo controllo anche dopo il rendering iniziale. Non vengono osservati gli attributi che lo script stesso modifica nel menu.
+
+Il test browser richiede Selenium già disponibile, il profilo dedicato e autorizzazione alle modifiche temporanee dei menu:
+
+```sh
+. /Volumes/Simo/Development/codex-browser-tools/env.sh
+"$CODEX_BROWSER_ROOT/venv/bin/python" src/wp-content/themes/githeme/tests/navigation-browser.py \
+  --url https://githeme:8890 --wp-path src
+```
+
+Crea due menu temporanei usando pagine pubblicate esistenti, senza modificarle. Verifica menu assente, semplice e annidato, etichette lunghe, entrambi gli header, mouse, Tab/Shift+Tab, Enter/Space, Escape, focus al cambio di larghezza e viewport strette. A viewport costante prova variazioni di logo, contenitore, disposizione, famiglia tipografica e caricamento tardivo di un font locale; campiona il layout su più frame per verificare stabilità e ritorno alla modalità orizzontale. Queste variazioni avvengono soltanto nel DOM e vengono eliminate ricaricando la pagina. La prova senza JavaScript usa una preferenza del solo profilo dedicato; al termine riavvia Firefox con JavaScript abilitato. Rimuove esclusivamente i menu creati dal test e ripristina le opzioni originali, verificando anche tipi, assenza e autoload in un nuovo processo WP-CLI. Screenshot, snapshot e risultati restano negli artifact esterni sul volume Simo. L’opzione `--baseline` registra il comportamento precedente senza richiedere il collasso aggiuntivo a 1024/820 px.
+
+Sono test di viewport e tastiera in Firefox desktop, non prove su smartphone reali o certificazioni di accessibilità; resta necessaria la verifica con screen reader.
 
 ## Licenza
 

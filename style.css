@@ -81,6 +81,12 @@ label { display: inline-block; }
 /* Nested links stay visible and keyboard accessible; no hover-only submenu. */
 .primary-menu ul { padding-inline-start: 1rem; border-inline-start: 1px solid var(--color-border); }
 .primary-navigation { min-width: 0; max-width: 100%; }
+/* The same mobile layout also applies when the actual desktop menu cannot fit. */
+.primary-navigation.is-compact { width: 100%; }
+.primary-navigation.is-compact .primary-menu { flex-direction: column; margin-block-start: .75rem; text-align: start; }
+.menu-toggle::before { content: ""; display: inline-block; width: 1em; height: .75em; margin-inline-end: .5em; vertical-align: -.05em; border-block: 2px solid currentColor; background: linear-gradient(currentColor, currentColor) center / 100% 2px no-repeat; }
+.menu-toggle[aria-expanded="true"]::before { border: 0; background: linear-gradient(45deg, transparent calc(50% - 1px), currentColor calc(50% - 1px), currentColor calc(50% + 1px), transparent calc(50% + 1px)), linear-gradient(-45deg, transparent calc(50% - 1px), currentColor calc(50% - 1px), currentColor calc(50% + 1px), transparent calc(50% + 1px)); }
+
 .githeme-header-stacked .header-inner { flex-direction: column; }
 .githeme-header-stacked .site-branding { text-align: center; }
 .githeme-header-stacked .primary-menu { justify-content: center; }
