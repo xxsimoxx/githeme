@@ -26,7 +26,7 @@ jobs:
             use_local_config: 'true'
             enable_warnings: 'true'
             extra_args: '--report-json=./phpcs.json'
-            excludes: 'tests'
+            excludes: 'tests/'
         - name: Update summary
           run: |
             npm i -g github:10up/phpcs-json-to-md
