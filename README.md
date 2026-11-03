@@ -1,10 +1,10 @@
 # githeme
 
-Tema classico generalista per ClassicPress, in fase iniziale di sviluppo.
+Tema classico generalista per ClassicPress, in fase iniziale di sviluppo. Versione in preparazione: **0.3.0**.
 
 ## Ambiente di riferimento
 
-- Core locale ClassicPress su `develop`, versione dichiarata `2.7.4+dev`.
+- Test eseguiti sul fork locale ClassicPress, branch `fix/customizer-regressions` derivato da `develop`, commit `79193cbb98bb4bd4a286cc37cba1a221940396f0`. Il core dichiara `2.7.4+dev` e include la riscrittura del Customizer destinata a ClassicPress 2.8.
 - PHP **8.2** come riferimento di sviluppo. Versioni minime e matrice di compatibilità non ancora definite; gli header dei requisiti non sono dichiarati in questa fase.
 - Nessun framework, compilazione degli asset o dipendenza obbligatoria da plugin.
 
@@ -17,7 +17,15 @@ Tema classico generalista per ClassicPress, in fase iniziale di sviluppo.
 - Immagini in evidenza, titolo documento e feed gestiti dal core; stili per l'editor classico e commenti nativi.
 - Aree widget facoltative `homepage-hero` e `homepage-content` per la homepage statica; `footer-experimental` prima dei crediti.
 - Quattro sezioni Customizer per colori, tipografia, larghezze/layout e header, con controlli standard e impostazioni `theme_mod`.
-- Anteprima tramite ricaricamento, senza JavaScript Customizer proprio o selective refresh abilitato dal tema.
+- Anteprima tramite ricaricamento; JavaScript informativo del tema per gli avvisi di contrasto in tempo reale, senza selective refresh.
+
+## ZIP installabile e repository di sviluppo
+
+Lo ZIP installabile generato dal workflow di release contiene il tema e le licenze dei font. Esclude `tests/` e `.github/` tramite `.gitattributes`.
+
+Per eseguire i test utilizzare un checkout completo del [repository di sviluppo](https://github.com/xxsimoxx/githeme), che include gli script PHP, JavaScript e Selenium. I comandi di verifica descritti qui richiedono quel checkout e gli strumenti di sviluppo indicati; non sono eseguibili dal solo ZIP installabile. Questi strumenti non sono dipendenze del tema in produzione.
+
+CSS frontend, JavaScript di navigazione e foglio dell’editor classico utilizzano la versione dichiarata in `style.css` come parametro cache. Gli asset informativi del Customizer usano invece la data di modifica dei rispettivi file.
 
 ## Impostazioni globali
 
@@ -58,7 +66,7 @@ L'editor classico riceve famiglia, dimensione, scala, colori e larghezza tramite
 Con ClassicPress caricato e PHP 8.2, dalla radice del progetto:
 
 ```sh
-wp eval-file src/wp-content/themes/githeme/tests/global-settings.php
+wp --path=src eval-file src/wp-content/themes/githeme/tests/global-settings.php
 ```
 
 Il test usa le API reali e valori sovrascritti soltanto in memoria: non salva impostazioni e non crea contenuti. Verifica valori limite, ordine delle larghezze, input invalidi, avvisi non bloccanti, font selezionati, CSS dell'editor e classi header. La verifica di anteprima/pubblicazione del Customizer e delle richieste font effettive usa separatamente un browser autenticato.
@@ -131,7 +139,7 @@ Il Customizer locale differisce dalle implementazioni storiche: non basare integ
 
 La doppia registrazione dei default di `develop` poteva cancellare la descrizione Colors. Il branch locale ClassicPress `fix/customizer-regressions` contiene la correzione esaminata separatamente; il tema non modifica il core.
 
-La riscrittura JavaScript conserva un proxy incompleto: nel ramo esaminato `wp.customize(id, callback)` non è invocabile e le sottoscrizioni Value si perdono dopo modifiche tramite UI. Riproduzione minima e confini dell’integrazione: [tests/customizer-api-regression.md](tests/customizer-api-regression.md). L’informazione dinamica del tema usa eventi DOM standard sui propri input, non sostituisce l’API mancante. Modifiche programmatiche di terze parti che non emettono eventi non sono osservabili in modo affidabile finché la regressione pubblica del core non sarà risolta.
+La riscrittura JavaScript conserva un proxy incompleto: nel ramo esaminato `wp.customize(id, callback)` non è invocabile e le sottoscrizioni Value si perdono dopo modifiche tramite UI. Riproduzione minima e confini dell’integrazione: [documentazione nel repository di sviluppo](https://github.com/xxsimoxx/githeme/blob/main/tests/customizer-api-regression.md). L’informazione dinamica del tema usa eventi DOM standard sui propri input, non sostituisce l’API mancante. Modifiche programmatiche di terze parti che non emettono eventi non sono osservabili in modo affidabile finché la regressione pubblica del core non sarà risolta.
 
 ## Test del contrasto
 
@@ -144,7 +152,7 @@ node src/wp-content/themes/githeme/tests/contrast.js
 
 I test coprono coppie identiche, bianco/nero, soglie, valori intermedi, input invalidi, foreground automatico, markup PHP di fallback e parità tra i linguaggi. Non scrivono nel database.
 
-Il test browser richiede Selenium già installato, l’ambiente esterno con `CODEX_BROWSER_ROOT`/`TMPDIR` sul volume Simo e una sessione autorizzata nel profilo dedicato. Non usa il launcher anonimo e non raccoglie credenziali. Eseguire solo con autorizzazione a modifiche temporanee dei theme_mod, poiché verifica anche la pubblicazione; conserva uno snapshot PHP tipizzato e lo ripristina esattamente in uscita:
+Il test browser richiede Selenium già installato, l’ambiente esterno con `CODEX_BROWSER_ROOT`/`TMPDIR` sul volume Simo e una sessione autorizzata nel profilo dedicato. Non usa il launcher anonimo e non raccoglie credenziali. Eseguire solo con autorizzazione a modifiche temporanee dei theme_mod, poiché verifica anche la pubblicazione; conserva snapshot completi dei theme_mod e dei transient Site Health interessati, elimina i propri changeset temporanei e verifica il ripristino in un nuovo processo WP-CLI:
 
 ```sh
 "$CODEX_BROWSER_ROOT/venv/bin/python" tests/customizer-contrast-browser.py --url https://sito-locale:porta --wp-path /percorso/ClassicPress/src
@@ -166,7 +174,7 @@ Il test browser richiede Selenium già disponibile, il profilo dedicato e autori
   --url https://githeme:8890 --wp-path src
 ```
 
-Crea due menu temporanei usando pagine pubblicate esistenti, senza modificarle. Verifica menu assente, semplice e annidato, etichette lunghe, entrambi gli header, mouse, Tab/Shift+Tab, Enter/Space, Escape, focus al cambio di larghezza e viewport strette. A viewport costante prova variazioni di logo, contenitore, disposizione, famiglia tipografica e caricamento tardivo di un font locale; campiona il layout su più frame per verificare stabilità e ritorno alla modalità orizzontale. Queste variazioni avvengono soltanto nel DOM e vengono eliminate ricaricando la pagina. La prova senza JavaScript usa una preferenza del solo profilo dedicato; al termine riavvia Firefox con JavaScript abilitato. Rimuove esclusivamente i menu creati dal test e ripristina le opzioni originali, verificando anche tipi, assenza e autoload in un nuovo processo WP-CLI. Screenshot, snapshot e risultati restano negli artifact esterni sul volume Simo. L’opzione `--baseline` registra il comportamento precedente senza richiedere il collasso aggiuntivo a 1024/820 px.
+Crea due menu temporanei usando pagine pubblicate esistenti, senza modificarle. Verifica menu assente, semplice e annidato, etichette lunghe, entrambi gli header, mouse, Tab/Shift+Tab, Enter/Space, Escape, focus al cambio di larghezza e viewport strette. A viewport costante prova variazioni di logo, contenitore, disposizione, famiglia tipografica e caricamento tardivo di un font locale; campiona il layout su più frame per verificare stabilità e ritorno alla modalità orizzontale. Queste variazioni avvengono soltanto nel DOM e vengono eliminate ricaricando la pagina. La prova senza JavaScript usa una preferenza del solo profilo dedicato; al termine ripristina e verifica la preferenza JavaScript originale del profilo. Rimuove esclusivamente i menu creati dal test e ripristina le opzioni originali, verificando anche tipi, assenza e autoload in un nuovo processo WP-CLI. Screenshot, snapshot e risultati restano negli artifact esterni sul volume Simo. L’opzione `--baseline` registra il comportamento precedente senza richiedere il collasso aggiuntivo a 1024/820 px.
 
 Sono test di viewport e tastiera in Firefox desktop, non prove su smartphone reali o certificazioni di accessibilità; resta necessaria la verifica con screen reader.
 

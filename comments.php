@@ -20,5 +20,12 @@ if ( post_password_required() ) {
 	<?php if ( ! comments_open() && get_comments_number() ) : ?>
 		<p><?php esc_html_e( 'Comments are closed.', 'githeme' ); ?></p>
 	<?php endif; ?>
-	<?php comment_form(); ?>
+	<?php
+	comment_form(
+		array(
+			'title_reply_before' => '<h2 id="reply-title" class="comment-reply-title">',
+			'title_reply_after'  => '</h2>',
+		)
+	);
+	?>
 </section>
