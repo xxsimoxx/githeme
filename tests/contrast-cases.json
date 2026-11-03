@@ -1,0 +1,124 @@
+[
+  {
+    "name": "black-white",
+    "first": "#000000",
+    "second": "#ffffff",
+    "ratio": 21.0
+  },
+  {
+    "name": "white-black",
+    "first": "#ffffff",
+    "second": "#000000",
+    "ratio": 21.0
+  },
+  {
+    "name": "same-white",
+    "first": "#ffffff",
+    "second": "#ffffff",
+    "ratio": 1.0
+  },
+  {
+    "name": "same-black",
+    "first": "#000000",
+    "second": "#000000",
+    "ratio": 1.0
+  },
+  {
+    "name": "shorthand",
+    "first": "#abc",
+    "second": "#aabbcc",
+    "ratio": 1.0
+  },
+  {
+    "name": "body-default",
+    "first": "#202833",
+    "second": "#ffffff",
+    "ratio": 14.864781134738
+  },
+  {
+    "name": "pale-text",
+    "first": "#eaf5af",
+    "second": "#ffffff",
+    "ratio": 1.1552122736018
+  },
+  {
+    "name": "below-threshold",
+    "first": "#777777",
+    "second": "#ffffff",
+    "ratio": 4.478089453577214
+  },
+  {
+    "name": "above-threshold",
+    "first": "#767676",
+    "second": "#ffffff",
+    "ratio": 4.542224959605253
+  },
+  {
+    "name": "middle-gray",
+    "first": "#808080",
+    "second": "#ffffff",
+    "ratio": 3.9494396480491156
+  },
+  {
+    "name": "red-white",
+    "first": "#ff0000",
+    "second": "#ffffff",
+    "ratio": 3.9984767707539985
+  },
+  {
+    "name": "blue-white",
+    "first": "#0000ff",
+    "second": "#ffffff",
+    "ratio": 8.592471358428805
+  },
+  {
+    "name": "invalid-text",
+    "first": "red",
+    "second": "#fff",
+    "ratio": null
+  },
+  {
+    "name": "invalid-length",
+    "first": "#ffff",
+    "second": "#fff",
+    "ratio": null
+  },
+  {
+    "name": "invalid-channel",
+    "first": "#ggg",
+    "second": "#fff",
+    "ratio": null
+  },
+  {
+    "name": "empty",
+    "first": "",
+    "second": "#fff",
+    "ratio": null
+  },
+  {
+    "name": "null",
+    "first": null,
+    "second": "#fff",
+    "ratio": null
+  },
+  {
+    "name": "number",
+    "first": 123,
+    "second": "#fff",
+    "ratio": null
+  },
+  {
+    "name": "array",
+    "first": [
+      "#fff"
+    ],
+    "second": "#fff",
+    "ratio": null
+  },
+  {
+    "name": "trailing-newline",
+    "first": "#fff\n",
+    "second": "#000",
+    "ratio": null
+  }
+]

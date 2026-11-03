@@ -82,14 +82,33 @@ function githeme_palette() {
 		$id              = 'githeme_color_' . $name;
 		$value           = get_theme_mod( $id, $defaults[ $id ] );
 		$colors[ $name ] = is_string( $value ) ? sanitize_hex_color( $value ) : null;
-		$colors[ $name ] = $colors[ $name ] ?: $defaults[ $id ];
+		$colors[ $name ] = null === githeme_hex_channels( $colors[ $name ] ) ? $defaults[ $id ] : $colors[ $name ];
 	}
 	return $colors;
 }
 
+/**
+ * Single source for the sRGB/WCAG calculation constants, also sent to JS.
+ *
+ * @return array Calculation constants and normal-size text threshold.
+ */
+function githeme_contrast_rules() {
+	return array(
+		'channelMax'        => 255,
+		'breakpoint'        => 0.04045,
+		'divisor'           => 12.92,
+		'offset'            => 0.055,
+		'scale'             => 1.055,
+		'gamma'             => 2.4,
+		'weights'           => array( 0.2126, 0.7152, 0.0722 ),
+		'flare'             => 0.05,
+		'normalTextMinimum' => 4.5,
+	);
+}
+
 /** Convert valid #RGB/#RRGGBB to RGB channels; return null for invalid input. */
 function githeme_hex_channels( $color ) {
-	if ( ! is_string( $color ) || ! preg_match( '/^#(?:[a-f0-9]{3}|[a-f0-9]{6})$/i', $color ) ) {
+	if ( ! is_string( $color ) || ! preg_match( '/^#(?:[a-f0-9]{3}|[a-f0-9]{6})\z/i', $color ) ) {
 		return null;
 	}
 	$hex = substr( $color, 1 );
@@ -105,28 +124,60 @@ function githeme_color_luminance( $color ) {
 	if ( null === $channels ) {
 		return null;
 	}
+	$rules  = githeme_contrast_rules();
 	$linear = array_map(
-		static function ( $channel ) {
-			$channel /= 255;
-			return $channel <= 0.04045 ? $channel / 12.92 : pow( ( $channel + 0.055 ) / 1.055, 2.4 );
+		static function ( $channel ) use ( $rules ) {
+			$channel /= $rules['channelMax'];
+			return $channel <= $rules['breakpoint'] ? $channel / $rules['divisor'] : pow( ( $channel + $rules['offset'] ) / $rules['scale'], $rules['gamma'] );
 		},
 		$channels
 	);
-	return 0.2126 * $linear[0] + 0.7152 * $linear[1] + 0.0722 * $linear[2];
+	return $rules['weights'][0] * $linear[0] + $rules['weights'][1] * $linear[1] + $rules['weights'][2] * $linear[2];
 }
 
 /** WCAG contrast ratio, or null for invalid input. Never blocks saving. */
 function githeme_contrast_ratio( $first, $second ) {
-	$a = githeme_color_luminance( $first );
-	$b = githeme_color_luminance( $second );
-	return null === $a || null === $b ? null : ( max( $a, $b ) + 0.05 ) / ( min( $a, $b ) + 0.05 );
+	$a     = githeme_color_luminance( $first );
+	$b     = githeme_color_luminance( $second );
+	$rules = githeme_contrast_rules();
+	return null === $a || null === $b ? null : ( max( $a, $b ) + $rules['flare'] ) / ( min( $a, $b ) + $rules['flare'] );
 }
 
 /** Choose the better contrasting foreground for a solid button background. */
 function githeme_button_text_color( $background ) {
+	if ( null === githeme_hex_channels( $background ) ) {
+		return null;
+	}
 	return githeme_contrast_ratio( $background, '#000000' ) >= githeme_contrast_ratio( $background, '#ffffff' ) ? '#000000' : '#ffffff';
 }
 
+/**
+ * Normal-size text only: does not assess component borders, icons or logos.
+ *
+ * @param array $colors Palette colors; missing/invalid pairs are not assessed.
+ * @return array Ratios, thresholds and states keyed by usage.
+ */
+function githeme_contrast_report( $colors ) {
+	$rules  = githeme_contrast_rules();
+	$button = githeme_button_text_color( $colors['primary'] ?? null );
+	$pairs  = array(
+		'text'   => array( $colors['text'] ?? null, $colors['background'] ?? null ),
+		'link'   => array( $colors['link'] ?? null, $colors['background'] ?? null ),
+		'button' => array( $button, $colors['primary'] ?? null ),
+	);
+	$report = array();
+	foreach ( $pairs as $key => $pair ) {
+		$ratio          = githeme_contrast_ratio( $pair[0], $pair[1] );
+		$report[ $key ] = array(
+			'ratio'      => $ratio,
+			'minimum'    => $rules['normalTextMinimum'],
+			'status'     => null === $ratio ? 'invalid' : ( $ratio >= $rules['normalTextMinimum'] ? 'pass' : 'fail' ),
+			'foreground' => $pair[0],
+			'background' => $pair[1],
+		);
+	}
+	return $report;
+}
 /** Blend validated colors for derived theme surfaces and borders. */
 function githeme_mix_colors( $first, $second, $weight ) {
 	$a = githeme_hex_channels( $first );
@@ -138,13 +189,14 @@ function githeme_mix_colors( $first, $second, $weight ) {
 function githeme_contrast_warnings( $colors = null ) {
 	$colors   = $colors ?? githeme_palette();
 	$warnings = array();
-	if ( githeme_contrast_ratio( $colors['text'], $colors['background'] ) < 4.5 ) {
-		/* translators: %s: contrast ratio, for example 3.20. */
-		$warnings[] = sprintf( __( 'Text/background contrast is %s:1, below the 4.5:1 target. Saving is allowed.', 'githeme' ), number_format_i18n( githeme_contrast_ratio( $colors['text'], $colors['background'] ), 2 ) );
+	$report   = githeme_contrast_report( $colors );
+	if ( 'fail' === $report['text']['status'] ) {
+		/* translators: 1: contrast ratio, 2: minimum ratio for normal-size text. */
+		$warnings[] = sprintf( __( 'Text/background contrast is %1$s:1, below the %2$s:1 target. Saving is allowed.', 'githeme' ), number_format_i18n( $report['text']['ratio'], 2 ), number_format_i18n( $report['text']['minimum'], 1 ) );
 	}
-	if ( githeme_contrast_ratio( $colors['link'], $colors['background'] ) < 4.5 ) {
-		/* translators: %s: contrast ratio, for example 3.20. */
-		$warnings[] = sprintf( __( 'Link/background contrast is %s:1, below the 4.5:1 target. Saving is allowed.', 'githeme' ), number_format_i18n( githeme_contrast_ratio( $colors['link'], $colors['background'] ), 2 ) );
+	if ( 'fail' === $report['link']['status'] ) {
+		/* translators: 1: contrast ratio, 2: minimum ratio for normal-size text. */
+		$warnings[] = sprintf( __( 'Link/background contrast is %1$s:1, below the %2$s:1 target. Saving is allowed.', 'githeme' ), number_format_i18n( $report['link']['ratio'], 2 ), number_format_i18n( $report['link']['minimum'], 1 ) );
 	}
 	return $warnings;
 }
@@ -205,7 +257,7 @@ function githeme_custom_properties_css() {
 	$colors = githeme_palette();
 	$widths = githeme_rendered_widths();
 	$muted  = githeme_mix_colors( $colors['text'], $colors['background'], 0.85 );
-	if ( githeme_contrast_ratio( $muted, $colors['background'] ) < 4.5 ) {
+	if ( githeme_contrast_ratio( $muted, $colors['background'] ) < githeme_contrast_rules()['normalTextMinimum'] ) {
 		$muted = $colors['text'];
 	}
 	$properties = array(

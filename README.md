@@ -41,7 +41,13 @@ Le dimensioni restano relative alle preferenze del browser; lo zoom non è limit
 
 Valori incoerenti delle larghezze generano errori di validazione nel Customizer, anche quando più impostazioni cambiano insieme. Valori preesistenti non validi sono limitati soltanto nel rendering, segnalati nella sezione e nella schermata Temi e **mai riscritti automaticamente**.
 
-Il contrasto testo/sfondo e link/sfondo viene calcolato tramite `githeme_contrast_ratio()`, indipendente dall'interfaccia. Un rapporto inferiore a 4,5:1 produce consigli informativi nella sezione Colori e nella schermata Temi; non impedisce il salvataggio. Questi avvisi sono ricalcolati al caricamento delle schermate, non durante la modifica interattiva. Il testo dei pulsanti usa automaticamente bianco o nero secondo il contrasto migliore. Superfici, bordi e testi secondari sono derivati dalla palette.
+Il controllo informativo “Color contrast” in Colors mostra stato testuale, rapporto e soglia per testo/sfondo, link/sfondo e testo normale dei pulsanti/primario. Il riferimento 4,5:1 riguarda il testo di dimensione normale: non è una verifica di loghi, icone, bordi dei componenti, stili dei plugin o conformità dell’intero sito. Stati hover/focus e identificazione dei link richiedono verifiche separate. Il confronto usa il rapporto non arrotondato; la visualizzazione mostra due decimali.
+
+Il pannello PHP rimane leggibile nel documento ricevuto dal server se lo script del tema manca. La nota statica indica di ricaricare dopo il salvataggio; quando lo script è disponibile viene sostituita dalla spiegazione degli aggiornamenti immediati. Questo fallback informativo non rende il Customizer del core interamente utilizzabile senza JavaScript.
+
+Gli aggiornamenti visivi seguono gli eventi nativi `input` e `change` dei campi renderizzati dal tema tramite il controllo colore e il binding pubblico `link()`. Nessun accesso al DOM interno del Customizer, a Backbone o al proxy. Una live region separata, inizialmente vuota, usa `role="status"`, `aria-live="polite"` e `aria-atomic="true"`; aggiorna soltanto i risultati cambiati dopo 750 ms di pausa, senza spostare il focus. Non vengono annunciati aggiornamenti identici. L’effettiva lettura richiede comunque verifica manuale con screen reader.
+
+Il riferimento è [WCAG 2.2, contrasto del testo](https://www.w3.org/WAI/WCAG22/Understanding/contrast-minimum.html). Le costanti sRGB e la soglia sono definite una sola volta in `githeme_contrast_rules()` e passate a JavaScript. Le implementazioni PHP/JS della stessa formula WCAG sono verificate con casi condivisi e test di parità. `githeme_contrast_report()` restituisce anche lo stato non calcolabile per input invalidi. I consigli non modificano colori scelti né bloccano il salvataggio; la validazione sintattica esistente resta separata. Il testo dei pulsanti sceglie automaticamente bianco o nero con contrasto migliore. Superfici, bordi e testi secondari restano derivati dalla palette.
 
 I font WOFF2 sono locali e non modificati, con licenze SIL OFL 1.1 e provenienza documentata in `assets/fonts/SOURCES.md`. Il tema dichiara solo le due varianti variabili, normale e corsiva, della famiglia selezionata: il browser scarica i file quando il contenuto li usa. Nessun preload forzato e nessun font caricato dal tema con lo stack di sistema. I plugin possono avere impostazioni font proprie, indipendenti dal tema.
 
@@ -55,7 +61,7 @@ Con ClassicPress caricato e PHP 8.2, dalla radice del progetto:
 wp eval-file src/wp-content/themes/githeme/tests/global-settings.php
 ```
 
-Il test usa le API reali e valori sovrascritti soltanto in memoria: non salva impostazioni e non crea contenuti. Verifica valori limite, ordine delle larghezze, input invalidi, avvisi non bloccanti, font selezionati, CSS dell'editor e classi header. La verifica di anteprima/pubblicazione del Customizer e delle richieste font effettive richiede ancora un browser autenticato.
+Il test usa le API reali e valori sovrascritti soltanto in memoria: non salva impostazioni e non crea contenuti. Verifica valori limite, ordine delle larghezze, input invalidi, avvisi non bloccanti, font selezionati, CSS dell'editor e classi header. La verifica di anteprima/pubblicazione del Customizer e delle richieste font effettive usa separatamente un browser autenticato.
 
 Accessibilità WCAG 2.2 AA, prestazioni e SEO tecnico sono obiettivi di sviluppo, non certificazioni della versione iniziale.
 
@@ -86,11 +92,30 @@ Da verificare: CSS e formattazione FX Builder, parser FX Shortcodes nei diversi 
 
 Il Customizer locale differisce dalle implementazioni storiche: non basare integrazioni sulle variabili interne del suo proxy JavaScript.
 
-## Limiti noti della versione 0.2.0
+## Compatibilità del Customizer
 
-Sul core `develop` esaminato, `wp-admin/customize.php` richiama nuovamente `register_controls()` dopo `customize_register`: la sezione core `colors` viene ricreata e perde la descrizione aggiunta dal tema, inclusi gli avvisi di contrasto. Il comportamento è stato riprodotto a livello PHP anche con una semplice descrizione statica; non dipende dal calcolo del contrasto o dall'escaping. Gli avvisi nella schermata Temi seguono un percorso separato.
+La doppia registrazione dei default di `develop` poteva cancellare la descrizione Colors. Il branch locale ClassicPress `fix/customizer-regressions` contiene la correzione esaminata separatamente; il tema non modifica il core.
 
-Le descrizioni sono inoltre costruite al caricamento usando i valori disponibili in quella fase: non si aggiornano in tempo reale durante le modifiche. La versione 0.2.0 non include correzioni o workaround per questo problema. Il ciclo autenticato completo di anteprima e pubblicazione resta da verificare in un browser automatizzabile.
+La riscrittura JavaScript conserva un proxy incompleto: nel ramo esaminato `wp.customize(id, callback)` non è invocabile e le sottoscrizioni Value si perdono dopo modifiche tramite UI. Riproduzione minima e confini dell’integrazione: [tests/customizer-api-regression.md](tests/customizer-api-regression.md). L’informazione dinamica del tema usa eventi DOM standard sui propri input, non sostituisce l’API mancante. Modifiche programmatiche di terze parti che non emettono eventi non sono osservabili in modo affidabile finché la regressione pubblica del core non sarà risolta.
+
+## Test del contrasto
+
+Dalla radice ClassicPress, con WP-CLI, PHP e Node già disponibili:
+
+```sh
+wp --path=src eval-file src/wp-content/themes/githeme/tests/contrast.php
+node src/wp-content/themes/githeme/tests/contrast.js
+```
+
+I test coprono coppie identiche, bianco/nero, soglie, valori intermedi, input invalidi, foreground automatico, markup PHP di fallback e parità tra i linguaggi. Non scrivono nel database.
+
+Il test browser richiede Selenium già installato, l’ambiente esterno con `CODEX_BROWSER_ROOT`/`TMPDIR` sul volume Simo e una sessione autorizzata nel profilo dedicato. Non usa il launcher anonimo e non raccoglie credenziali. Eseguire solo con autorizzazione a modifiche temporanee dei theme_mod, poiché verifica anche la pubblicazione; conserva uno snapshot PHP tipizzato e lo ripristina esattamente in uscita:
+
+```sh
+"$CODEX_BROWSER_ROOT/venv/bin/python" tests/customizer-contrast-browser.py --url https://sito-locale:porta --wp-path /percorso/ClassicPress/src
+```
+
+Il percorso dello script è relativo alla directory del tema. Screenshot e risultati vengono salvati nell’area artifacts dell’ambiente esterno, fuori dai repository. Il test server-fallback analizza HTML senza eseguirne gli script; non equivale a una verifica completa del Customizer con JavaScript disattivato. Gli annunci sono verificati come mutazioni DOM, non come parlato di VoiceOver.
 
 ## Licenza
 

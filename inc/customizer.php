@@ -12,12 +12,12 @@ function githeme_sanitize_color( $value, $setting ) {
 	if ( '' === $value ) {
 		return $setting->default;
 	}
-	return is_string( $value ) ? sanitize_hex_color( $value ) : null;
+	return null === githeme_hex_channels( $value ) ? null : sanitize_hex_color( $value );
 }
 
 /** Only syntax errors block colors. Low contrast is informational. */
 function githeme_validate_color( $validity, $value ) {
-	if ( '' !== $value && ( ! is_string( $value ) || ! sanitize_hex_color( $value ) ) ) {
+	if ( '' !== $value && null === githeme_hex_channels( $value ) ) {
 		$validity->add( 'invalid_color', __( 'Enter a hexadecimal color such as #14569a.', 'githeme' ) );
 	}
 	return $validity;
@@ -97,11 +97,28 @@ function githeme_saved_width_warning() {
 /** Register explicit controls using only public PHP APIs and refresh transport. */
 function githeme_customize_register( $manager ) {
 	$defaults = githeme_defaults();
-	$color_description = __( 'These colors apply to theme elements. Contrast advice is informational and does not prevent saving. Advice is recalculated when this screen is loaded.', 'githeme' );
-	foreach ( githeme_contrast_warnings() as $warning ) {
-		$color_description .= '<p>' . esc_html( $warning ) . '</p>';
-	}
-	$manager->add_section( 'colors', array( 'title' => __( 'Colors', 'githeme' ), 'description' => $color_description, 'priority' => 40 ) );
+	require_once __DIR__ . '/class-githeme-contrast-color-control.php';
+	require_once __DIR__ . '/class-githeme-contrast-control.php';
+	$manager->add_section(
+		'colors',
+		array(
+			'title'       => __( 'Colors', 'githeme' ),
+			'description' => __( 'Global colors for theme elements. Contrast advice is informational and never prevents saving.', 'githeme' ),
+			'priority'    => 40,
+		)
+	);
+	$manager->add_control(
+		new Githeme_Contrast_Control(
+			$manager,
+			'githeme_contrast',
+			array(
+				'section'    => 'colors',
+				'settings'   => array(),
+				'capability' => 'edit_theme_options',
+				'priority'   => 5,
+			)
+		)
+	);
 	foreach ( array(
 		'primary'    => __( 'Primary color', 'githeme' ),
 		'secondary'  => __( 'Secondary color', 'githeme' ),
@@ -111,7 +128,17 @@ function githeme_customize_register( $manager ) {
 	) as $name => $label ) {
 		$id = 'githeme_color_' . $name;
 		$manager->add_setting( $id, array( 'type' => 'theme_mod', 'default' => $defaults[ $id ], 'transport' => 'refresh', 'sanitize_callback' => 'githeme_sanitize_color', 'validate_callback' => 'githeme_validate_color' ) );
-		$manager->add_control( new WP_Customize_Color_Control( $manager, $id, array( 'label' => $label, 'section' => 'colors' ) ) );
+		$manager->add_control(
+			new Githeme_Contrast_Color_Control(
+				$manager,
+				$id,
+				array(
+					'label'      => $label,
+					'section'    => 'colors',
+					'color_name' => $name,
+				)
+			)
+		);
 	}
 
 	$manager->add_section( 'githeme_typography', array( 'title' => __( 'Typography', 'githeme' ), 'priority' => 41 ) );
@@ -146,6 +173,55 @@ function githeme_customize_register( $manager ) {
 }
 add_action( 'customize_register', 'githeme_customize_register' );
 
+/**
+ * Shared UI strings for the PHP fallback and the progressive JS display.
+ *
+ * @return array Translated UI labels and templates.
+ */
+function githeme_contrast_strings() {
+	return array(
+		'title'       => __( 'Color contrast', 'githeme' ),
+		'text'        => __( 'Text / background', 'githeme' ),
+		'link'        => __( 'Links / background', 'githeme' ),
+		'button'      => __( 'Button text / primary', 'githeme' ),
+		'pass'        => __( 'Adequate', 'githeme' ),
+		'fail'        => __( 'Insufficient', 'githeme' ),
+		'invalid'     => __( 'Not calculated', 'githeme' ),
+		'invalidHelp' => __( 'Enter a valid hexadecimal color (#RGB or #RRGGBB).', 'githeme' ),
+		'liveHelp'    => __( 'Results update as you edit. Screen reader updates are grouped after a short pause. Contrast advice does not block saving.', 'githeme' ),
+		/* translators: 1: contrast ratio, 2: minimum required ratio. */
+		'ratio'       => __( '%1$s:1 · minimum %2$s:1', 'githeme' ),
+		/* translators: 1: foreground hex color, 2: background hex color. */
+		'pair'        => __( '%1$s on %2$s', 'githeme' ),
+	);
+}
+
+/** Load only in the controls pane through the control's public enqueue API. */
+function githeme_enqueue_contrast_assets() {
+	$uri  = get_template_directory_uri();
+	$path = get_template_directory();
+	wp_enqueue_style( 'githeme-customizer-contrast', $uri . '/assets/css/customizer-contrast.css', array(), (string) filemtime( $path . '/assets/css/customizer-contrast.css' ) );
+	wp_enqueue_script( 'githeme-contrast', $uri . '/assets/js/contrast.js', array(), (string) filemtime( $path . '/assets/js/contrast.js' ), true );
+	$defaults = githeme_defaults();
+	$colors   = array();
+	foreach ( array( 'text', 'background', 'link', 'primary', 'secondary' ) as $name ) {
+		$colors[ $name ] = $defaults[ 'githeme_color_' . $name ];
+	}
+	wp_add_inline_script(
+		'githeme-contrast',
+		'window.githemeContrastConfig = ' . wp_json_encode(
+			array(
+				'rules'    => githeme_contrast_rules(),
+				'strings'  => githeme_contrast_strings(),
+				'defaults' => $colors,
+				'locale'   => str_replace( '_', '-', get_user_locale() ),
+			),
+			JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT
+		) . ';',
+		'before'
+	);
+	wp_enqueue_script( 'githeme-customizer-contrast', $uri . '/assets/js/customizer-contrast.js', array( 'githeme-contrast' ), (string) filemtime( $path . '/assets/js/customizer-contrast.js' ), true );
+}
 /** Server-rendered advice after saving, without blocking notices or custom JS. */
 function githeme_settings_notices() {
 	$screen = get_current_screen();

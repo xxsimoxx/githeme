@@ -1,0 +1,21 @@
+/* Controls-pane information stays readable regardless of the chosen palette. */
+.githeme-contrast-panel {
+	box-sizing: border-box;
+	padding: 12px;
+	border: 1px solid #8c8f94;
+	border-radius: 3px;
+	background: #fff;
+	color: #1d2327;
+	overflow-wrap: anywhere;
+}
+.githeme-contrast-panel h3 { margin: 0 0 8px; font-size: 16px; }
+.githeme-contrast-panel h4 { margin: 0 0 3px; font-size: 13px; }
+.githeme-contrast-panel p { margin: 6px 0; line-height: 1.5; }
+.githeme-contrast-results { margin: 10px 0; list-style: none; }
+.githeme-contrast-results li { padding: 8px; border-inline-start: 4px solid #50575e; background: #f6f7f7; }
+.githeme-contrast-results li[data-status="pass"] { border-inline-start-color: #00652e; }
+.githeme-contrast-results li[data-status="fail"] { border-inline-start-color: #a00; }
+.githeme-contrast-results small { font-size: inherit; }
+@media (forced-colors: active) {
+	.githeme-contrast-panel, .githeme-contrast-results li { border-color: CanvasText; }
+}

@@ -22,9 +22,9 @@
 - Non aggiungere `front-page.php` senza valutare la precedenza sui template assegnati alle pagine.
 - Nessun page builder interno, sistema astratto di componenti o configurazione generica.
 - Contenuti delle singole pagine nell'editor classico; impostazioni globali di presentazione nel Customizer tramite `theme_mod`.
-- Usare soltanto API pubbliche; esaminare il Customizer del branch locale `develop` senza presumere compatibilità JavaScript storica.
+- Usare soltanto API pubbliche; esaminare il Customizer del branch locale attivo senza presumere compatibilità JavaScript storica.
 - Controlli semplici, preferibilmente una sola impostazione per controllo, default espliciti e validazione/sanitizzazione appropriate.
-- Le segnalazioni di contrasto sono informative e non impediscono il salvataggio. Il calcolo deve restare riutilizzabile e indipendente dall'interfaccia; niente JavaScript dedicato agli avvisi in questa fase.
+- Le segnalazioni di contrasto sono informative e non impediscono il salvataggio. Calcoli PHP/JS indipendenti dall’interfaccia, costanti e soglie definite in PHP ed esportate a JS, con test di parità. Pannello server-rendered e aggiornamenti da eventi DOM standard degli input di cui il tema possiede il markup. Annunci polite aggregati dopo una pausa, mai focus automatico. Non utilizzare il proxy incompleto di wp.customize: documentare le API mancanti senza patch al core o polyfill nel tema.
 - Il testo dei pulsanti sceglie bianco o nero secondo il contrasto migliore. Usare font locali con licenze incluse; dichiarare solo la famiglia selezionata e lasciare il caricamento dei file al loro effettivo utilizzo.
 - Larghezze: validare contenuto ≤ estesa ≤ layout considerando le modifiche simultanee. I limiti difensivi di rendering non devono riscrivere i valori salvati.
 - Header in linea o centrato con menu sotto: mantenere un solo menu nel DOM.
