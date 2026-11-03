@@ -4,6 +4,8 @@
  *
  * @package githeme
  */
+
+$githeme_static_homepage = is_front_page() && ! is_home();
 ?>
 <!doctype html>
 <html <?php language_attributes(); ?>>
@@ -42,4 +44,8 @@
 		<?php endif; ?>
 	</div>
 </header>
-<main id="main-content" class="site-main site-container" tabindex="-1">
+<main id="main-content" class="site-main <?php echo $githeme_static_homepage ? 'site-main-homepage' : 'site-container'; ?>" tabindex="-1">
+<?php
+if ( $githeme_static_homepage ) {
+	get_template_part( 'template-parts/homepage-widgets', null, array( 'area' => 'homepage-hero' ) );
+}

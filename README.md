@@ -15,7 +15,7 @@ Tema classico generalista per ClassicPress, in fase iniziale di sviluppo.
 - Menu mobile progressivo: senza JavaScript tutti i link restano visibili; sottomenu sempre visibili, senza interazioni basate soltanto sul passaggio del mouse.
 - CSS responsive con custom properties, focus visibile e collegamento per saltare al contenuto.
 - Immagini in evidenza, titolo documento e feed gestiti dal core; stili per l'editor classico e commenti nativi.
-- Area widget facoltativa `footer-experimental`, visibile prima dei crediti.
+- Aree widget facoltative `homepage-hero` e `homepage-content` per la homepage statica; `footer-experimental` prima dei crediti.
 - Quattro sezioni Customizer per colori, tipografia, larghezze/layout e header, con controlli standard e impostazioni `theme_mod`.
 - Anteprima tramite ricaricamento, senza JavaScript Customizer proprio o selective refresh abilitato dal tema.
 
@@ -73,7 +73,42 @@ Accessibilità WCAG 2.2 AA, prestazioni e SEO tecnico sono obiettivi di sviluppo
 4. Per una homepage statica scegliere una normale pagina nelle impostazioni di lettura. Non esiste `front-page.php`: la pagina usa il normale rendering e può essere costruita con FX Builder.
 5. Provare l'area “Footer — experimental” da Aspetto → Widget e dal Customizer.
 
-La homepage nativa a sezioni non è ancora implementata e resterà facoltativa. Le impostazioni globali di presentazione saranno separate dai contenuti editoriali delle pagine.
+## Homepage statica e widget
+
+1. Creare o scegliere una pagina pubblicata, con i contenuti nell’editor classico o, facoltativamente, con FX Builder.
+2. In Impostazioni → Lettura selezionare una pagina iniziale statica e assegnare quella pagina; scegliere eventualmente una pagina distinta per gli articoli.
+3. In Aspetto → Widget, oppure nelle aree widget del Customizer, aggiungere widget a **Homepage Hero** e/o **Homepage Content**.
+
+L’ordine è header, Homepage Hero, contenuto della pagina, Homepage Content, footer. Le due aree sono indipendenti e opzionali: senza widget non producono contenitori vuoti. La homepage continua a mostrare il normale contenuto della pagina, con il suo titolo. Usare titoli di livello 2 per i widget e una gerarchia coerente nei loro contenuti.
+
+Hero dispone dell’intera larghezza della viewport; il widget decide il proprio layout interno. Homepage Content rispetta la larghezza massima del layout configurata nel tema. Colori, tipografia e larghezze continuano a usare le impostazioni globali. Contenuti di terze parti possono richiedere propri accorgimenti responsive.
+
+Gli ID stabili delle aree sono `homepage-hero` e `homepage-content`. Funzionano tramite `register_sidebar()` e `dynamic_sidebar()`, senza API specifiche dei plugin. Non appaiono nella homepage con gli ultimi articoli, nella pagina separata degli articoli, nelle pagine interne o negli articoli singoli.
+
+Non viene aggiunto `front-page.php`: restano valide la gerarchia nativa e i template assegnati alle pagine che utilizzano header e footer standard del tema. Template esterni che sostituiscono completamente header/footer devono gestire autonomamente il rendering. Non sono introdotti ordinamenti proprietari, nuove opzioni Customizer o sistemi di sezioni.
+
+## Test della homepage
+
+Dalla radice ClassicPress:
+
+```sh
+wp --path=src eval-file src/wp-content/themes/githeme/tests/homepage-widgets.php
+wp --path=src --skip-plugins eval-file src/wp-content/themes/githeme/tests/homepage-widgets.php
+```
+
+Il test PHP non scrive nel database: verifica registrazione, aree vuote/popolate e contesti ammessi, comprese callback widget senza output.
+
+Il test browser richiede l’ambiente Selenium esterno già disponibile e autorizzazione alle modifiche temporanee delle sole opzioni elencate nello script. Utilizza pagine/articoli di prova **già pubblicati**, senza modificarne il contenuto. Gli ID seguenti sono esempi dell’installazione locale; verificare quelli del proprio sito prima dell’esecuzione:
+
+```sh
+. /Volumes/Simo/Development/codex-browser-tools/env.sh
+"$CODEX_BROWSER_ROOT/venv/bin/python" src/wp-content/themes/githeme/tests/homepage-widgets-browser.py \
+  --url https://githeme:8890 --wp-path src \
+  --front-page-id 9 --posts-page-id 15 --internal-page-id 5 --post-id 6 \
+  --fx-content-id 16 --fx-page-id 10
+```
+
+Gli argomenti FX sono facoltativi e si riferiscono ai fixture locali con i marcatori `githeme-test-*`; ometterli dove non disponibili. Il test usa esplicitamente il profilo Firefox dedicato, esegue screenshot e osservazioni BiDi senza registrare credenziali. Salva snapshot privati delle opzioni nell’area artifacts sul volume Simo e ripristina valori, tipi, assenza e autoload, verificandoli anche in un nuovo processo WP-CLI. Controlla inoltre che i contenuti dei fixture e l’attivazione dei plugin rimangano invariati. Le viewport headless strette verificano il responsive, non emulano completamente uno smartphone.
 
 ## Plugin FX facoltativi
 

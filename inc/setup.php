@@ -30,6 +30,24 @@ function githeme_enqueue_assets() {
 add_action( 'wp_enqueue_scripts', 'githeme_enqueue_assets' );
 
 function githeme_register_widget_areas() {
+	foreach ( array(
+		'homepage-hero'    => __( 'Homepage Hero', 'githeme' ),
+		'homepage-content' => __( 'Homepage Content', 'githeme' ),
+	) as $id => $name ) {
+		register_sidebar(
+			array(
+				'name'          => $name,
+				'id'            => $id,
+				'description'   => 'homepage-hero' === $id
+					? __( 'Optional widgets before the static homepage content. Widgets can use the full available width.', 'githeme' )
+					: __( 'Optional widgets after the static homepage content.', 'githeme' ),
+				'before_widget' => '<section id="%1$s" class="widget %2$s">',
+				'after_widget'  => '</section>',
+				'before_title'  => '<h2 class="widget-title">',
+				'after_title'   => '</h2>',
+			)
+		);
+	}
 	register_sidebar(
 		array(
 			'name'          => __( 'Footer — experimental', 'githeme' ),

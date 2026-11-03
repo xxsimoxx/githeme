@@ -85,6 +85,17 @@ label { display: inline-block; }
 .githeme-header-stacked .site-branding { text-align: center; }
 .githeme-header-stacked .primary-menu { justify-content: center; }
 .site-main { padding-block: clamp(2rem, 5vw, 4rem); min-height: 45vh; }
+/* Static homepage only: full-width hero, existing layout width for everything else. */
+.site-main-homepage {
+	display: grid;
+	align-content: start;
+	grid-template-columns: minmax(0, 1fr) minmax(0, min(calc(100% - 2 * var(--space)), var(--width-layout))) minmax(0, 1fr);
+}
+.site-main-homepage > * { grid-column: 2; min-width: 0; }
+.site-main-homepage > .homepage-hero { grid-column: 1 / -1; }
+.homepage-widget-area { margin-block-end: 2rem; }
+.site-main-homepage > .homepage-content { margin-block-end: 0; }
+.homepage-widget-area > .widget + .widget { margin-block-start: var(--space); }
 .entry { margin-block-end: 3rem; }
 .entry-meta { color: var(--color-muted); }
 .featured-image img { display: block; }
