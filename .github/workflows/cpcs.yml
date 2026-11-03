@@ -25,7 +25,7 @@ jobs:
           with:
             use_local_config: 'true'
             enable_warnings: 'true'
-            extra_args: '--report-json=./phpcs.json'
+            extra_args: '--report-json=./phpcs.json --ignore=*/tests/*'
             excludes: 'tests/'
         - name: Update summary
           run: |
