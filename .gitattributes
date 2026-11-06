@@ -1,6 +1,6 @@
 .github export-ignore
 tests/  export-ignore
-Docs/  export-ignore
+docs/  export-ignore
 .gitattributes export-ignore
 .gitignore export-ignore
 AGENTS.md export-ignore
