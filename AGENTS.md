@@ -8,7 +8,7 @@
 - Non eseguire commit, push, merge, checkout o altre operazioni Git che modificano lo stato senza autorizzazione.
 - Non installare dipendenze o alterare l'ambiente senza conferma.
 - Prima di modifiche significative, presentare un piano e attendere approvazione; l'autorizzazione esplicita a un ambito vale per il lavoro richiesto.
-- Segnalare anomalie del core, soprattutto del Customizer, senza correggerle nel core né introdurre workaround silenziosi nel tema.
+- Correggere i difetti del tema. Per limiti del Customizer cercare prima alternative tramite API pubbliche/supportate, senza dipendenze fragili dal suo CSS, markup o JavaScript interno; non modificare il core. Non aprire nuove issue o PR salvo richiesta esplicita (la PR già aperta è esclusa da questa indicazione). Limitare le indagini alle funzionalità necessarie al lavoro corrente e segnalare brevemente i limiti irrisolti senza bloccare gli altri interventi.
 - Non delegare ad altri agenti senza richiesta esplicita.
 
 ## Architettura
@@ -41,3 +41,10 @@
 - Controllare le differenze Git del tema e l'assenza di modifiche nel repository ClassicPress.
 - Segnalare separatamente le prove manuali MAMP: attivazione, homepage statica, navigazione da tastiera/mobile, editor, Customizer, widget, commenti e combinazioni FX.
 - Non attivare temi/plugin né salvare impostazioni nel database senza autorizzazione.
+
+## Superfici e identità
+
+- Header e footer hanno sfondi theme_mod indipendenti, bianchi per default; usare le rispettive variabili CSS, non colori di un sito né la superficie derivata come sfondo del footer.
+- Titolo visibile per default e sempre presente senza logo; motto indipendente, nascosto sulle nuove attivazioni. Inizializzare una sola volta il flag del motto preesistente in amministrazione/attivazione per preservare le configurazioni legacy, senza riscrivere titolo o motto.
+- Controlli checkbox: usare contenitore e associazioni native (customize-inside-control-row, for/id, aria-describedby), binding pubblico link() e valore HTML stabile 1. Nessun override CSS per compensare markup incompleto.
+- Il contrasto informativo include testo/link rispetto agli sfondi di header e footer; nessun blocco del salvataggio e nessuna correzione automatica dei colori.

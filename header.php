@@ -21,8 +21,10 @@ $githeme_static_homepage = is_front_page() && ! is_home();
 	<div class="site-container header-inner">
 		<div class="site-branding">
 			<?php the_custom_logo(); ?>
+			<?php if ( ! has_custom_logo() || githeme_identity_visible( 'githeme_show_title' ) ) : ?>
 			<p class="site-title"><a href="<?php echo esc_url( home_url( '/' ) ); ?>"><?php echo esc_html( get_bloginfo( 'name' ) ); ?></a></p>
-			<?php if ( get_bloginfo( 'description' ) ) : ?>
+			<?php endif; ?>
+			<?php if ( githeme_identity_visible( 'githeme_show_tagline' ) && get_bloginfo( 'description' ) ) : ?>
 				<p class="site-description"><?php echo esc_html( get_bloginfo( 'description' ) ); ?></p>
 			<?php endif; ?>
 		</div>

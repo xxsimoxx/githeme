@@ -9,6 +9,8 @@ Text Domain: githeme
 
 :root {
 	--color-background: #fff;
+	--color-header-background: #fff;
+	--color-footer-background: #fff;
 	--color-surface: #f3f4f6;
 	--color-text: #202833;
 	--color-muted: #4b5563;
@@ -66,7 +68,7 @@ label { display: inline-block; }
 .entry-content > * { max-width: var(--width-content); margin-inline: auto; }
 .entry-content > .alignwide { max-width: var(--width-wide); }
 .entry-content > .alignfull { max-width: 100%; }
-.site-header { border-block-end: 1px solid var(--color-border); }
+.site-header { background: var(--color-header-background); border-block-end: 1px solid var(--color-border); }
 .header-inner { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: var(--space); padding-block: var(--space); }
 .site-branding { min-width: 0; max-width: 100%; }
 .custom-logo-link { display: inline-block; max-width: 100%; }
@@ -75,12 +77,68 @@ label { display: inline-block; }
 .site-title a { color: inherit; }
 .site-description { margin: .25rem 0 0; color: var(--color-muted); }
 .primary-menu, .primary-menu ul { list-style: none; margin: 0; padding: 0; }
-.primary-menu { display: flex; flex-wrap: wrap; gap: .25rem 1rem; }
-.primary-menu a { display: inline-block; padding: .55rem .25rem; }
-.primary-menu .current-menu-item > a { font-weight: 700; text-decoration-thickness: .15em; }
-/* Nested links stay visible and keyboard accessible; no hover-only submenu. */
-.primary-menu ul { padding-inline-start: 1rem; border-inline-start: 1px solid var(--color-border); }
+.primary-menu { display: flex; flex-wrap: wrap; gap: .125rem .25rem; font-size: .9375em; }
+.primary-menu > li { min-width: 0; max-width: 100%; }
+.primary-menu a {
+	display: inline-flex;
+	align-items: center;
+	min-height: 2.75rem;
+	padding: .55rem .65rem;
+	border-inline-start: 2px solid transparent;
+	border-radius: .375rem;
+	color: var(--color-link);
+	font-weight: 500;
+	line-height: 1.4;
+	text-decoration: none;
+}
+.primary-menu a:hover, .primary-menu a:focus-visible { background: var(--color-surface); }
+.primary-menu a:focus-visible { outline-color: var(--color-primary); outline-offset: 2px; }
+.primary-menu .current-menu-ancestor > a { font-weight: 600; }
+.primary-menu .current-menu-item > a, .primary-menu a[aria-current="page"] {
+	border-inline-start-color: var(--color-primary);
+	background: var(--color-surface);
+	font-weight: 600;
+}
+.primary-menu .menu-item-has-children > a::after {
+	content: "";
+	display: inline-block;
+	flex: 0 0 auto;
+	width: .4em;
+	height: .4em;
+	margin-inline-start: .55em;
+	margin-block-start: -.2em;
+	border-right: 1.5px solid currentColor;
+	border-bottom: 1.5px solid currentColor;
+	transform: rotate(45deg);
+}
+/* Without JavaScript, nested links remain visible in the normal document flow. */
+.primary-menu ul { padding-inline-start: .75rem; border-inline-start: 1px solid var(--color-border); }
+.primary-menu ul li + li { margin-block-start: 0; }
+.primary-menu ul a { display: flex; padding: .4rem .55rem; font-weight: 400; line-height: 1.45; }
 .primary-navigation { min-width: 0; max-width: 100%; }
+/* Enhanced desktop: only root links take up space in the horizontal row. */
+.primary-navigation.is-enhanced:not(.is-compact) .primary-menu > li { position: relative; }
+.primary-navigation.is-enhanced:not(.is-compact) .primary-menu > li > a { white-space: nowrap; }
+.primary-navigation.is-enhanced:not(.is-compact) .primary-menu > li > ul {
+	display: none;
+	position: absolute;
+	inset-block-start: 100%;
+	inset-inline-start: 0;
+	z-index: 100;
+	width: max-content;
+	min-width: min(14rem, calc(100vw - 2rem));
+	max-width: min(20rem, calc(100vw - 2rem));
+	padding: .25rem;
+	border: 1px solid var(--color-border);
+	border-radius: .5rem;
+	background: var(--color-background);
+	box-shadow: 0 .35rem 1rem color-mix(in srgb, var(--color-text) 12%, transparent);
+	transform: translateX(var(--submenu-offset, 0px));
+	text-align: start;
+}
+.primary-navigation.is-enhanced:not(.is-compact) .primary-menu > li:not(.submenu-dismissed):hover > ul,
+.primary-navigation.is-enhanced:not(.is-compact) .primary-menu > li:not(.submenu-dismissed):focus-within > ul { display: block; }
+
 /* The same mobile layout also applies when the actual desktop menu cannot fit. */
 .primary-navigation.is-compact { width: 100%; }
 .primary-navigation.is-compact .primary-menu { flex-direction: column; margin-block-start: .75rem; text-align: start; }
@@ -123,7 +181,7 @@ label { display: inline-block; }
 .comment-meta { font-size: .9rem; }
 .avatar { border-radius: 50%; }
 .bypostauthor > .comment-body { border-inline-start: 2px solid var(--color-border); padding-inline-start: 1rem; }
-.site-footer { padding-block: 2rem; background: var(--color-surface); border-block-start: 1px solid var(--color-border); }
+.site-footer { padding-block: 2rem; background: var(--color-footer-background); border-block-start: 1px solid var(--color-border); }
 .footer-widgets { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr)); gap: 2rem; }
 .widget { min-width: 0; }
 .site-credits { margin-block-end: 0; }

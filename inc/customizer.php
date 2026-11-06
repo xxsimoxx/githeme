@@ -94,11 +94,20 @@ function githeme_saved_width_warning() {
 	return $values[0] > $values[1] || $values[1] > $values[2] ? __( 'Saved widths are inconsistent. Safe limits are applied only when rendering; saved values have not been changed.', 'githeme' ) : '';
 }
 
+/** Checkbox values must be booleans or the native HTML 1/empty form values. */
+function githeme_validate_checkbox( $validity, $value ) {
+	if ( null === githeme_sanitize_checkbox( $value ) ) {
+		$validity->add( 'invalid_checkbox', __( 'Choose whether to display this item.', 'githeme' ) );
+	}
+	return $validity;
+}
+
 /** Register explicit controls using only public PHP APIs and refresh transport. */
 function githeme_customize_register( $manager ) {
 	$defaults = githeme_defaults();
 	require_once __DIR__ . '/class-githeme-contrast-color-control.php';
 	require_once __DIR__ . '/class-githeme-contrast-control.php';
+	require_once __DIR__ . '/class-githeme-checkbox-control.php';
 	$manager->add_section(
 		'colors',
 		array(
@@ -125,6 +134,8 @@ function githeme_customize_register( $manager ) {
 		'text'       => __( 'Text color', 'githeme' ),
 		'background' => __( 'Background color', 'githeme' ),
 		'link'       => __( 'Link color', 'githeme' ),
+		'header_background' => __( 'Header background', 'githeme' ),
+		'footer_background' => __( 'Footer background', 'githeme' ),
 	) as $name => $label ) {
 		$id = 'githeme_color_' . $name;
 		$manager->add_setting( $id, array( 'type' => 'theme_mod', 'default' => $defaults[ $id ], 'transport' => 'refresh', 'sanitize_callback' => 'githeme_sanitize_color', 'validate_callback' => 'githeme_validate_color' ) );
@@ -139,6 +150,17 @@ function githeme_customize_register( $manager ) {
 				)
 			)
 		);
+	}
+
+	foreach ( array(
+		'githeme_show_title' => __( 'Show site title', 'githeme' ),
+		'githeme_show_tagline' => __( 'Show tagline', 'githeme' ),
+	) as $id => $label ) {
+		$manager->add_setting( $id, array( 'type' => 'theme_mod', 'default' => githeme_identity_default( $id ), 'transport' => 'refresh', 'sanitize_callback' => 'githeme_sanitize_checkbox', 'validate_callback' => 'githeme_validate_checkbox' ) );
+		$manager->add_control( new Githeme_Checkbox_Control( $manager, $id, array(
+			'label' => $label, 'section' => 'title_tagline', 'priority' => 'githeme_show_title' === $id ? 11 : 21,
+			'description' => 'githeme_show_title' === $id ? __( 'Without a logo, the site title is always displayed.', 'githeme' ) : __( 'Visibility is independent of the logo. Existing configured taglines stay enabled until you uncheck this option and publish.', 'githeme' ),
+		) ) );
 	}
 
 	$manager->add_section( 'githeme_typography', array( 'title' => __( 'Typography', 'githeme' ), 'priority' => 41 ) );
@@ -184,6 +206,10 @@ function githeme_contrast_strings() {
 		'text'        => __( 'Text / background', 'githeme' ),
 		'link'        => __( 'Links / background', 'githeme' ),
 		'button'      => __( 'Button text / primary', 'githeme' ),
+		'header_text' => __( 'Header text / background', 'githeme' ),
+		'header_link' => __( 'Header links / background', 'githeme' ),
+		'footer_text' => __( 'Footer text / background', 'githeme' ),
+		'footer_link' => __( 'Footer links / background', 'githeme' ),
 		'pass'        => __( 'Adequate', 'githeme' ),
 		'fail'        => __( 'Insufficient', 'githeme' ),
 		'invalid'     => __( 'Not calculated', 'githeme' ),
@@ -204,7 +230,7 @@ function githeme_enqueue_contrast_assets() {
 	wp_enqueue_script( 'githeme-contrast', $uri . '/assets/js/contrast.js', array(), (string) filemtime( $path . '/assets/js/contrast.js' ), true );
 	$defaults = githeme_defaults();
 	$colors   = array();
-	foreach ( array( 'text', 'background', 'link', 'primary', 'secondary' ) as $name ) {
+	foreach ( array( 'text', 'background', 'link', 'primary', 'secondary', 'header_background', 'footer_background' ) as $name ) {
 		$colors[ $name ] = $defaults[ 'githeme_color_' . $name ];
 	}
 	wp_add_inline_script(

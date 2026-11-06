@@ -15,6 +15,10 @@ function githeme_defaults() {
 		'githeme_color_text'      => '#202833',
 		'githeme_color_background' => '#ffffff',
 		'githeme_color_link'      => '#14569a',
+		'githeme_color_header_background' => '#ffffff',
+		'githeme_color_footer_background' => '#ffffff',
+		'githeme_show_title'      => true,
+		'githeme_show_tagline'    => false,
 		'githeme_font_family'     => 'system',
 		'githeme_font_size'       => 1,
 		'githeme_heading_scale'   => '1.25',
@@ -44,6 +48,46 @@ function githeme_get_choice( $id ) {
 	$defaults = githeme_defaults();
 	$value    = get_theme_mod( $id, $defaults[ $id ] );
 	return is_scalar( $value ) && in_array( (string) $value, githeme_setting_choices( $id ), true ) ? (string) $value : $defaults[ $id ];
+}
+
+/** Visibility used once when enabling the controls; never changes the site text. */
+function githeme_initial_tagline_visibility( $mods, $description, $activating = false ) {
+	if ( ! is_string( $description ) || '' === trim( $description ) ) {
+		return false;
+	}
+	if ( ! $activating ) {
+		return true; // An already active theme previously displayed this tagline.
+	}
+	$old_settings = array_diff_key( githeme_defaults(), array_flip( array( 'githeme_show_title', 'githeme_show_tagline', 'githeme_color_header_background', 'githeme_color_footer_background' ) ) );
+	return (bool) array_intersect_key( (array) $mods, $old_settings ) || ! empty( $mods['custom_logo'] ) || ! empty( $mods['nav_menu_locations'] );
+}
+
+/** Read-only fallback before legacy visibility has been initialized in admin. */
+function githeme_identity_default( $id ) {
+	if ( 'githeme_show_tagline' === $id ) {
+		$mods = (array) get_theme_mods();
+		if ( ! array_key_exists( $id, $mods ) ) {
+			return githeme_initial_tagline_visibility( $mods, get_option( 'blogdescription', '' ) );
+		}
+	}
+	return githeme_defaults()[ $id ];
+}
+
+/** Strict boolean input shared by storage validation and defensive rendering. */
+function githeme_sanitize_checkbox( $value ) {
+	if ( in_array( $value, array( true, 1, '1' ), true ) ) {
+		return true;
+	}
+	if ( in_array( $value, array( false, 0, '0', '' ), true ) ) {
+		return false;
+	}
+	return null;
+}
+
+function githeme_identity_visible( $id ) {
+	$default = githeme_identity_default( $id );
+	$value   = githeme_sanitize_checkbox( get_theme_mod( $id, $default ) );
+	return null === $value ? $default : $value;
 }
 
 /** Numeric bounds: minimum, maximum, step (all dimensions in rem). */
@@ -78,7 +122,7 @@ function githeme_get_number( $id ) {
 function githeme_palette() {
 	$defaults = githeme_defaults();
 	$colors   = array();
-	foreach ( array( 'primary', 'secondary', 'text', 'background', 'link' ) as $name ) {
+	foreach ( array( 'primary', 'secondary', 'text', 'background', 'link', 'header_background', 'footer_background' ) as $name ) {
 		$id              = 'githeme_color_' . $name;
 		$value           = get_theme_mod( $id, $defaults[ $id ] );
 		$colors[ $name ] = is_string( $value ) ? sanitize_hex_color( $value ) : null;
@@ -164,6 +208,10 @@ function githeme_contrast_report( $colors ) {
 		'text'   => array( $colors['text'] ?? null, $colors['background'] ?? null ),
 		'link'   => array( $colors['link'] ?? null, $colors['background'] ?? null ),
 		'button' => array( $button, $colors['primary'] ?? null ),
+		'header_text' => array( $colors['text'] ?? null, $colors['header_background'] ?? null ),
+		'header_link' => array( $colors['link'] ?? null, $colors['header_background'] ?? null ),
+		'footer_text' => array( $colors['text'] ?? null, $colors['footer_background'] ?? null ),
+		'footer_link' => array( $colors['link'] ?? null, $colors['footer_background'] ?? null ),
 	);
 	$report = array();
 	foreach ( $pairs as $key => $pair ) {
@@ -197,6 +245,18 @@ function githeme_contrast_warnings( $colors = null ) {
 	if ( 'fail' === $report['link']['status'] ) {
 		/* translators: 1: contrast ratio, 2: minimum ratio for normal-size text. */
 		$warnings[] = sprintf( __( 'Link/background contrast is %1$s:1, below the %2$s:1 target. Saving is allowed.', 'githeme' ), number_format_i18n( $report['link']['ratio'], 2 ), number_format_i18n( $report['link']['minimum'], 1 ) );
+	}
+	$labels = array(
+		'header_text' => __( 'Header text / background', 'githeme' ),
+		'header_link' => __( 'Header links / background', 'githeme' ),
+		'footer_text' => __( 'Footer text / background', 'githeme' ),
+		'footer_link' => __( 'Footer links / background', 'githeme' ),
+	);
+	foreach ( $labels as $key => $label ) {
+		if ( 'fail' === $report[ $key ]['status'] ) {
+			/* translators: 1: contrast pair, 2: ratio, 3: threshold. */
+			$warnings[] = sprintf( __( '%1$s: contrast %2$s:1, below %3$s:1. Saving is allowed.', 'githeme' ), $label, number_format_i18n( $report[ $key ]['ratio'], 2 ), number_format_i18n( $report[ $key ]['minimum'], 1 ) );
+		}
 	}
 	return $warnings;
 }
@@ -266,6 +326,8 @@ function githeme_custom_properties_css() {
 		'color-text'       => $colors['text'],
 		'color-background' => $colors['background'],
 		'color-link'       => $colors['link'],
+		'color-header-background' => $colors['header_background'],
+		'color-footer-background' => $colors['footer_background'],
 		'color-button-text' => githeme_button_text_color( $colors['primary'] ),
 		'color-surface'    => githeme_mix_colors( $colors['secondary'], $colors['background'], 0.06 ),
 		'color-muted'      => $muted,

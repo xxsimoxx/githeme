@@ -10,11 +10,23 @@
 	const branding = header?.querySelector('.site-branding');
 	if (!toggle || !menu || !header || !branding) return;
 
+	navigation.classList.add('is-enhanced');
 	const mobile = window.matchMedia('(max-width: 48rem)');
 	let compact = false;
 	const setExpanded = (expanded) => {
 		toggle.setAttribute('aria-expanded', String(expanded));
 		menu.hidden = compact && !expanded;
+	};
+	const positionDropdowns = () => {
+		// Keep the top-level dropdown panel inside either viewport edge. Deeper
+		// lists remain nested in that panel instead of creating off-screen flyouts.
+		menu.querySelectorAll(':scope > li > ul').forEach((submenu) => {
+			submenu.style.removeProperty('--submenu-offset');
+			if (compact || !submenu.getClientRects().length) return;
+			const bounds = submenu.getBoundingClientRect();
+			const offset = Math.max(8 - bounds.left, Math.min(0, window.innerWidth - 8 - bounds.right));
+			if (offset) submenu.style.setProperty('--submenu-offset', `${offset}px`);
+		});
 	};
 	const synchronize = () => {
 		const focused = document.activeElement;
@@ -28,7 +40,18 @@
 		const wrapped = items.some((item) => Math.abs(item.getBoundingClientRect().top - items[0].getBoundingClientRect().top) > 1);
 		const stacked = document.body.classList.contains('githeme-header-stacked');
 		const belowBranding = !stacked && navigation.getBoundingClientRect().top >= branding.getBoundingClientRect().bottom;
-		compact = mobile.matches || wrapped || belowBranding || menu.scrollWidth > navigation.clientWidth;
+		const bounds = navigation.getBoundingClientRect();
+		// scrollWidth includes open, absolutely positioned dropdowns. Only root
+		// links determine whether the horizontal navigation itself fits.
+		const overflowing = items.some((item) => {
+			const link = item.querySelector(':scope > a');
+			const rect = (link || item).getBoundingClientRect();
+			return rect.left < bounds.left - 1 || rect.right > bounds.right + 1;
+		});
+		compact = mobile.matches || wrapped || belowBranding || overflowing;
+		if (compact !== wasCompact) {
+			items.forEach((item) => item.classList.remove('submenu-dismissed'));
+		}
 		navigation.classList.toggle('is-compact', compact);
 		toggle.hidden = !compact;
 		const expanded = compact && wasCompact && wasExpanded;
@@ -39,16 +62,41 @@
 			menu.querySelector('a')?.focus();
 		}
 		setExpanded(expanded);
+		positionDropdowns();
 	};
 
 	toggle.addEventListener('click', () => {
 		setExpanded(toggle.getAttribute('aria-expanded') !== 'true');
 	});
-	navigation.addEventListener('keydown', (event) => {
-		if (event.key === 'Escape' && compact && toggle.getAttribute('aria-expanded') === 'true') {
-			setExpanded(false);
-			toggle.focus();
+	navigation.addEventListener('focusin', (event) => {
+		const item = event.target.closest('#primary-menu > li');
+		if (item && !item.contains(event.relatedTarget)) item.classList.remove('submenu-dismissed');
+		positionDropdowns();
+	});
+	navigation.addEventListener('pointerover', (event) => {
+		const item = event.target.closest('#primary-menu > li');
+		if (item && !item.contains(event.relatedTarget)) {
+			item.classList.remove('submenu-dismissed');
+			positionDropdowns();
 		}
+	});
+	document.addEventListener('keydown', (event) => {
+		if (event.key !== 'Escape') return;
+		if (compact) {
+			if (navigation.contains(event.target) && toggle.getAttribute('aria-expanded') === 'true') {
+				setExpanded(false);
+				toggle.focus();
+			}
+			return;
+		}
+		// Dismiss hover/focus content without requiring the pointer to move.
+		menu.querySelectorAll(':scope > li > ul').forEach((submenu) => {
+			if (!submenu.getClientRects().length) return;
+			const item = submenu.parentElement;
+			if (submenu.contains(document.activeElement)) item.querySelector(':scope > a')?.focus();
+			item.classList.add('submenu-dismissed');
+			event.preventDefault();
+		});
 	});
 	// Batch geometry checks outside ResizeObserver delivery. Measuring the desktop
 	// layout temporarily changes dimensions; only the final layout is observed.

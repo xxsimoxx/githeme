@@ -28,7 +28,7 @@
   return ratio(background, '#000000') >= ratio(background, '#ffffff') ? '#000000' : '#ffffff';
  }
  function report(colors) {
-  const pairs = {text: [colors.text, colors.background], link: [colors.link, colors.background], button: [buttonTextColor(colors.primary), colors.primary]};
+  const pairs = {text: [colors.text, colors.background], link: [colors.link, colors.background], button: [buttonTextColor(colors.primary), colors.primary], header_text: [colors.text, colors.header_background], header_link: [colors.link, colors.header_background], footer_text: [colors.text, colors.footer_background], footer_link: [colors.link, colors.footer_background]};
   const result = {};
   Object.keys(pairs).forEach(key => {
    const pair = pairs[key], value = ratio(pair[0], pair[1]);

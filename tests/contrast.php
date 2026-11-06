@@ -43,6 +43,11 @@ foreach ( array( '#000000', '#ffffff', '#eaf5af', '#777777', '#767676', '#14569a
 		'buttonText' => $button,
 	);
 }
+foreach ( array( '#ffffff', '#111111', 'invalid' ) as $surface ) {
+	$colors = array( 'text' => '#111111', 'link' => '#123456', 'primary' => '#112233', 'background' => '#ffffff', 'header_background' => $surface, 'footer_background' => $surface );
+	$reports[] = array( 'colors' => $colors, 'report' => githeme_contrast_report( $colors ), 'buttonText' => githeme_button_text_color( $colors['primary'] ) );
+	$check( 'invalid' === $surface ? null === end( $reports )['report']['header_text']['ratio'] : null !== end( $reports )['report']['header_text']['ratio'], 'Surface calculation' );
+}
 $check(
 	'fail' === githeme_contrast_report(
 		array(

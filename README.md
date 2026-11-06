@@ -12,7 +12,7 @@ Tema classico generalista per ClassicPress, in fase iniziale di sviluppo. Versio
 
 - Template classici per pagine, articoli, elenchi, ricerca e pagina 404.
 - Header e footer semantici, menu principale e logo personalizzato.
-- Menu responsive progressivo: il pulsante compare sotto 48rem oppure quando il menu non entra nello spazio dell’header; senza JavaScript tutti i link restano visibili. I sottomenu rimangono visibili, senza interazioni basate soltanto sul passaggio del mouse.
+- Menu responsive progressivo: il pulsante compare sotto 48rem oppure quando il menu non entra nello spazio dell’header; senza JavaScript tutti i link restano visibili. Su desktop i sottomenu si aprono al passaggio del mouse o al focus da tastiera; nella navigazione compatta restano visibili quando il menu è aperto.
 - CSS responsive con custom properties, focus visibile e collegamento per saltare al contenuto.
 - Immagini in evidenza, titolo documento e feed gestiti dal core; stili per l'editor classico e commenti nativi.
 - Aree widget facoltative `homepage-hero` e `homepage-content` per la homepage statica; `footer-experimental` prima dei crediti.
@@ -162,7 +162,7 @@ Il percorso dello script è relativo alla directory del tema. Screenshot e risul
 
 ## Test della navigazione
 
-Il menu conserva un unico elenco nel DOM, il pulsante nativo con `aria-expanded` e `aria-controls`, e i sottomenu sempre disponibili quando l’elenco è aperto. L’indicatore passa da hamburger a chiusura senza modificare il nome accessibile “Menu”. Escape chiude la navigazione compatta e riporta il focus al pulsante. Il layout centrato con menu sotto considera disponibile l’intera riga; quello in linea considera anche lo spazio dell’identità del sito. Senza JavaScript il menu può andare a capo e tutti i collegamenti restano utilizzabili.
+Il menu conserva un unico elenco nel DOM, il pulsante nativo con `aria-expanded` e `aria-controls`, e i sottomenu disponibili con mouse e tastiera. Su desktop i pannelli sono fuori dal flusso: soltanto le voci principali determinano lo spazio necessario, non la larghezza dei sottomenu aperti. Escape chiude anche un pannello desktop e riporta il focus al collegamento genitore quando proviene dal pannello. I livelli ulteriori restano annidati nel pannello, senza flyout fuori schermo. L’indicatore passa da hamburger a chiusura senza modificare il nome accessibile “Menu”. Escape chiude la navigazione compatta e riporta il focus al pulsante. Il layout centrato con menu sotto considera disponibile l’intera riga; quello in linea considera anche lo spazio dell’identità del sito. Senza JavaScript il menu può andare a capo e tutti i collegamenti restano utilizzabili.
 
 I ricalcoli sono raggruppati tramite `requestAnimationFrame`: `ResizeObserver` osserva header, identità e menu, mentre le variazioni delle classi di layout e delle variabili inline vengono rilevate separatamente. Il completamento del caricamento dei font locali richiede un nuovo controllo anche dopo il rendering iniziale. Non vengono osservati gli attributi che lo script stesso modifica nel menu.
 
@@ -181,3 +181,49 @@ Sono test di viewport e tastiera in Firefox desktop, non prove su smartphone rea
 ## Licenza
 
 Il codice del tema è GPL-3.0-or-later, come indicato in `LICENSE`. I font inclusi mantengono la propria licenza SIL OFL 1.1, disponibile nelle rispettive directory.
+
+
+### Verifica della navigazione senza scritture al sito
+
+`tests/navigation-readonly-browser.py` verifica il menu realmente assegnato a 1440, 1280,
+768, 390 e 320 CSS px con mouse, Tab/Shift+Tab, Escape, Enter/Space e controllo del focus.
+Menu breve, piatto, annidato, troppo lungo e assente sono fixture in un iframe isolato,
+con lo stesso CSS/JavaScript: non vengono cambiati menu, contenuti o assegnazioni nel DB.
+Sono verificati anche fallback senza script, variazioni dello spazio senza resize e
+stabilità degli osservatori. Le fixture non sostituiscono una verifica autenticata delle
+schermate di assegnazione menu. Profili anonimi temporanei e risultati rimangono su Simo;
+nessuna configurazione degli strumenti viene modificata.
+
+```sh
+. /Volumes/Simo/Development/codex-browser-tools/env.sh
+"$CODEX_BROWSER_ROOT/venv/bin/python" src/wp-content/themes/githeme/tests/navigation-readonly-browser.py
+```
+
+Usare questo test quando non è autorizzata alcuna modifica al database; il precedente
+`navigation-browser.py` crea invece fixture native e richiede autorizzazione esplicita.
+
+
+## Header, footer e identità
+
+Colors include sfondi indipendenti per header e footer, entrambi bianchi per impostazione
+predefinita (`githeme_color_header_background`, `githeme_color_footer_background`).
+Sono theme_mod validati come gli altri colori e diventano `--color-header-background`
+e `--color-footer-background`; il footer non usa più la superficie derivata dal secondario.
+La superficie derivata resta disponibile per hover e altri elementi. Testo e link
+continuano a usare la palette globale: il pannello informativo calcola separatamente
+anche i loro contrasti su header e footer, senza bloccare il salvataggio.
+
+In Site Identity, «Show site title» e «Show tagline» sono indipendenti. Il titolo è
+visibile per default ed è sempre mostrato quando non c’è un logo; il motto è nascosto
+per default sulle nuove attivazioni. Una configurazione esistente con motto valorizzato
+mantiene il motto visibile: la sua scelta viene inizializzata una sola volta nelle
+impostazioni del tema durante l’amministrazione/attivazione, senza riscrivere blogname
+o blogdescription. Per nasconderlo occorre togliere la spunta e pubblicare; salvare un
+altro controllo non lo nasconde. Il valore esplicito salvato ha sempre precedenza.
+Un motto vuoto non produce un contenitore vuoto.
+
+Le checkbox usano WP_Customize_Control, il contenitore nativo
+`customize-inside-control-row`, etichette for/id e descrizioni aria-describedby; il
+valore HTML resta 1 anche da disattivate. Nessun override CSS o API JavaScript interna.
+Il test mirato `tests/header-surfaces.php` usa solo override in memoria per le otto
+combinazioni logo/titolo/motto e la validazione delle nuove impostazioni.

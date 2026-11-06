@@ -61,3 +61,15 @@ function githeme_register_widget_areas() {
 	);
 }
 add_action( 'widgets_init', 'githeme_register_widget_areas' );
+
+
+/** Seed visibility once in administration/activation, preserving legacy taglines. */
+function githeme_initialize_identity_visibility() {
+	$mods = (array) get_theme_mods();
+	if ( array_key_exists( 'githeme_show_tagline', $mods ) ) {
+		return;
+	}
+	set_theme_mod( 'githeme_show_tagline', githeme_initial_tagline_visibility( $mods, get_option( 'blogdescription', '' ), 'after_switch_theme' === current_filter() ) );
+}
+add_action( 'admin_init', 'githeme_initialize_identity_visibility' );
+add_action( 'after_switch_theme', 'githeme_initialize_identity_visibility' );
