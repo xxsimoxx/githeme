@@ -17,7 +17,7 @@
 - PHP 8.2 è il riferimento di sviluppo. La matrice minima ClassicPress/PHP non è ancora definita: non dichiararla senza accordo e verifiche.
 - HTML semantico, CSS con custom properties, Grid/Flexbox e JavaScript vanilla progressivo.
 - Obiettivo WCAG 2.2 AA, responsive, prestazioni e SEO tecnico; nessuna dichiarazione di conformità senza verifica.
-- Nessun template, componente o impostazione legato a Gieffe, Postib o Dimark: sono casi d'uso, non architettura.
+- Nessun template, componente o impostazione legato a singoli siti, marchi o settori di attività: il tema rimane generalista.
 - La homepage nativa configurabile sarà facoltativa. Una normale pagina statica, anche con FX Builder, deve poter essere homepage.
 - Non aggiungere `front-page.php` senza valutare la precedenza sui template assegnati alle pagine.
 - Nessun page builder interno, sistema astratto di componenti o configurazione generica.
