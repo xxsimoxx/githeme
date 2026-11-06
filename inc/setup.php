@@ -29,6 +29,19 @@ function githeme_enqueue_assets() {
 }
 add_action( 'wp_enqueue_scripts', 'githeme_enqueue_assets' );
 
+/** Optional presentation layer; never enqueue or require the plugin itself. */
+function githeme_enqueue_fx_shortcodes_style() {
+	if ( wp_style_is( 'fx-shortcodes', 'enqueued' ) ) {
+		wp_enqueue_style(
+			'githeme-fx-shortcodes',
+			get_template_directory_uri() . '/assets/css/fx-shortcodes.css',
+			array( 'githeme-style', 'fx-shortcodes' ),
+			wp_get_theme( get_template() )->get( 'Version' )
+		);
+	}
+}
+add_action( 'wp_enqueue_scripts', 'githeme_enqueue_fx_shortcodes_style', 20 );
+
 function githeme_register_widget_areas() {
 	foreach ( array(
 		'homepage-hero'    => __( 'Homepage Hero', 'githeme' ),

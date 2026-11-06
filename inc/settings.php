@@ -329,6 +329,7 @@ function githeme_custom_properties_css() {
 		'color-header-background' => $colors['header_background'],
 		'color-footer-background' => $colors['footer_background'],
 		'color-button-text' => githeme_button_text_color( $colors['primary'] ),
+		'color-button-hover-text' => githeme_button_text_color( $colors['secondary'] ),
 		'color-surface'    => githeme_mix_colors( $colors['secondary'], $colors['background'], 0.06 ),
 		'color-muted'      => $muted,
 		'color-border'     => githeme_mix_colors( $colors['text'], $colors['background'], 0.6 ),

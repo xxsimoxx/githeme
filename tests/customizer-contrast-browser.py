@@ -554,7 +554,7 @@ try:
     record('initial-panel',rows=state(),api_type=driver.execute_script('return typeof wp.customize'))
     # Parse a fresh server response without executing its scripts: PHP fallback.
     fallback = driver.execute_async_script("const done=arguments[0];fetch(location.href).then(r=>r.text()).then(html=>{const d=new DOMParser().parseFromString(html,'text/html'),p=d.querySelector('#githeme-contrast-panel');done({rows:p.querySelectorAll('[data-githeme-contrast-row]').length,help:p.querySelector('[data-githeme-update-help]').textContent,live:p.querySelector('[data-githeme-live]').textContent});}).catch(()=>done(null));")
-    require(fallback and fallback['rows'] == 3 and fallback['live'] == '', 'Check failed at original line 120')
+    require(fallback and fallback['rows'] == len(state()) == 7 and fallback['live'] == '', 'Seven server-rendered contrast pairs, including header and footer')
     record('server-fallback',**fallback)
     for background, text, expected in [('#ffffff','#eaf5af','fail'),('#ffffff','#000000','pass'),('#000000','#000000','fail'),('#000000','#ffffff','pass')]:
         change('background', background)

@@ -1,0 +1,84 @@
+/* Optional FX Shortcodes presentation. Inline shortcode attributes take precedence.
+ * Keep the plugin's structure, size/style variants and image behaviour intact.
+ */
+.fx-button {
+	--fx-button-bg: var(--color-primary);
+	--fx-button-color: var(--color-button-text);
+	font-family: inherit;
+	border-radius: .375rem;
+	text-align: center;
+	white-space: normal;
+	overflow-wrap: anywhere;
+}
+
+/* The renderer exposes explicit button colors through these inline variables.
+ * Leave either customization entirely under the plugin's hover rules.
+ * Text buttons retain their transparent, underlined interaction variant.
+ */
+.fx-button:not(.fx-button--text):not([style*="--fx-button-bg"]):not([style*="--fx-button-color"]):is(:hover, :focus-visible) {
+	background-color: var(--color-secondary);
+	color: var(--color-button-hover-text);
+}
+.fx-button--outline:not([style*="--fx-button-bg"]):not([style*="--fx-button-color"]):is(:hover, :focus-visible) {
+	border-color: var(--color-secondary);
+}
+
+.fx-card {
+	background: var(--color-footer-background);
+	color: inherit;
+	border: 1px solid var(--color-border);
+	border-radius: .5rem;
+	box-shadow: 0 .125rem .375rem color-mix(in srgb, var(--color-text) 8%, transparent);
+}
+
+.fx-card__title {
+	font-family: inherit;
+	font-size: calc(var(--font-size-base) * var(--heading-5));
+	line-height: 1.3;
+}
+
+.fx-card__body > :last-child { margin-block-end: 0; }
+.fx-card__link:focus-visible {
+	/* display: contents has no box to outline; mark the visible children. */
+	outline: none;
+}
+.fx-card__link:focus-visible > * {
+	outline: 3px solid currentColor;
+	outline-offset: -3px;
+}
+
+.fx-cover {
+	background-color: var(--color-background);
+	color: inherit;
+	padding: clamp(1rem, 4vw, 2rem);
+}
+
+.fx-details {
+	background-color: var(--color-background);
+	color: inherit;
+	border-color: var(--color-border);
+	border-radius: .5rem;
+}
+
+.fx-details__summary {
+	min-height: 2.75rem;
+	line-height: 1.4;
+}
+.fx-details__summary:hover,
+.fx-details__summary:focus-visible {
+	background-color: color-mix(in srgb, currentColor 6%, transparent);
+}
+.fx-details__summary::after { transition: none; }
+.fx-details__content > :last-child { margin-block-end: 0; }
+
+.fx-button:focus-visible,
+.fx-details__summary:focus-visible {
+	outline: 3px solid currentColor;
+	outline-offset: 3px;
+}
+
+.fx-separator { color: var(--color-secondary); }
+
+@media (prefers-reduced-motion: reduce) {
+	.fx-button { transition: none; }
+}

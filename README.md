@@ -227,3 +227,10 @@ Le checkbox usano WP_Customize_Control, il contenitore nativo
 valore HTML resta 1 anche da disattivate. Nessun override CSS o API JavaScript interna.
 Il test mirato `tests/header-surfaces.php` usa solo override in memoria per le otto
 combinazioni logo/titolo/motto e la validazione delle nuove impostazioni.
+# Optional FX Shortcodes styling
+
+When FX Shortcodes enqueues its frontend stylesheet, githeme adds a small stylesheet for Button, Card, Cover, Details and Separator, after both the plugin and theme styles. No plugin is required and no new Customizer settings are added. Group and the builder plugins have no dedicated integration.
+
+Defaults use the existing Customizer palette: primary and automatically contrasted text for buttons, background and border for panels, inherited text, and secondary for separators. Plugin layout, image behaviour, button sizes and variants are preserved. Explicit inline shortcode attributes, including button color variables, remain authoritative; no `!important` rules are used. Keyboard focus and reduced-motion preferences are supported.
+
+Custom colors still require editorial contrast checks, especially when specifying only a button background, or text over a Cover image. The theme's automatic button text is calculated for the configured primary color, not arbitrary inline backgrounds. Separator thickness is controlled by the plugin's style variants; the installed renderer does not expose a separate thickness attribute.
