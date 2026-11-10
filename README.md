@@ -35,6 +35,37 @@ The integration uses the existing Customizer palette, respects explicit componen
 
 The theme works without FX Shortcodes, FX Builder, or FX Builder Widgets. Content authored with a particular plugin may still require that plugin to render correctly.
 
+## Static homepage widget areas
+
+Select a static homepage under **Settings → Reading**, then add native widgets through **Appearance → Widgets**:
+
+- **Homepage Hero** (`homepage-hero`) appears after the header and navigation, before the page content. Widgets can use the full available width.
+- **Homepage Content** (`homepage-content`) appears after the page content, before the footer.
+
+Both areas are optional and appear only on the static front page—not on the latest-posts homepage, a separate posts page, or internal pages. Areas without widget output add no empty wrappers. Leaving both areas empty keeps the normal static page rendering; the page’s own content remains editable in the classic editor. No plugin is required.
+
+A native **Text** widget can also contain a [gallery slider](#native-gallery-slider), including in Homepage Hero.
+
+## Native gallery slider
+
+Add `layout="slider"` to the native gallery shortcode in the classic editor or a native **Text** widget:
+
+```text
+[gallery layout="slider" ids="12,34,56"]
+```
+
+Replace the example IDs with image attachment IDs from your media library. Galleries without `layout="slider"` keep their standard behavior, including the native `thumbnail` size default. Slider galleries default to `large` unless you explicitly provide `size`, such as `size="medium"` or `size="full"`.
+
+When native dimensions are available for every image, slider images share a responsive height with proportional widths, without cropping or distortion. The common height is limited by the smallest source image, avoiding enlargement of small images; a low-resolution image can therefore reduce the height of the whole gallery. Missing dimension metadata or a browser without CSS container units keeps natural image heights instead.
+
+The slider uses native horizontal scrolling and CSS Scroll Snap. With JavaScript, previous/next buttons appear when scrolling is needed, and focused image links are brought into view. Use Tab and Shift+Tab for links and controls, or arrow keys on the focusable scrolling area. Touch, trackpad, and the native scrollbar remain available. Button navigation uses smooth scrolling unless reduced motion is preferred; focus corrections are immediate. There is no autoplay.
+
+Without JavaScript, the gallery remains usable through native scrolling and keyboard navigation, with no inactive buttons. Automatic focus correction is an enhancement: the browser may leave a focused image partially visible until you scroll further.
+
+Use the shortcode in a Text widget to place a slider in a [homepage widget area](#static-homepage-widget-areas). The native **Gallery** widget renders a standard gallery and does not expose the slider option; use a Text widget instead. No gallery plugin is required.
+
+Slider enhancement requires PHP’s DOM extension and recognizable native gallery markup. Empty, single-image, and feed output stays native; plugins that replace gallery markup may prevent enhancement.
+
 ## Compatibility and accessibility
 
 Development and regression testing have been carried out with **PHP 8.2** and a **ClassicPress 2.7.4+dev** checkout containing the Customizer changes intended for ClassicPress 2.8. These are tested environment details, **not minimum version requirements or a general compatibility guarantee**.
