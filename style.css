@@ -39,7 +39,8 @@ Requires CP: 2.7
 
 * { box-sizing: border-box; }
 html { -webkit-text-size-adjust: 100%; }
-body { margin: 0; background: var(--color-background); color: var(--color-text); font-family: var(--font-body); font-size: var(--font-size-base); font-optical-sizing: auto; line-height: 1.65; overflow-wrap: anywhere; }
+body { display: flex; flex-direction: column; min-height: 100vh; min-height: 100dvh; margin: 0; background: var(--color-background); color: var(--color-text); font-family: var(--font-body); font-size: var(--font-size-base); font-optical-sizing: auto; line-height: 1.65; overflow-wrap: anywhere; }
+body.admin-bar { min-height: calc(100vh - var(--wp-admin--admin-bar--height, 0px)); min-height: calc(100dvh - var(--wp-admin--admin-bar--height, 0px)); }
 [hidden] { display: none !important; }
 a { color: var(--color-link); text-underline-offset: .2em; }
 a:hover { text-decoration-thickness: .15em; }
@@ -150,7 +151,7 @@ label { display: inline-block; }
 .githeme-header-stacked .header-inner { flex-direction: column; }
 .githeme-header-stacked .site-branding { text-align: center; }
 .githeme-header-stacked .primary-menu { justify-content: center; }
-.site-main { padding-block: clamp(2rem, 5vw, 4rem); min-height: 45vh; }
+.site-main { flex: 1 0 auto; min-width: 0; padding-block: clamp(2rem, 5vw, 4rem); }
 /* Static homepage only: full-width hero, existing layout width for everything else. */
 .site-main-homepage {
 	display: grid;
@@ -183,10 +184,9 @@ label { display: inline-block; }
 .comment-meta { font-size: .9rem; }
 .avatar { border-radius: 50%; }
 .bypostauthor > .comment-body { border-inline-start: 2px solid var(--color-border); padding-inline-start: 1rem; }
-.site-footer { padding-block: 2rem; background: var(--color-footer-background); border-block-start: 1px solid var(--color-border); }
+.site-footer { flex-shrink: 0; padding-block: 2rem; background: var(--color-footer-background); border-block-start: 1px solid var(--color-border); }
 .footer-widgets { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr)); gap: 2rem; }
 .widget { min-width: 0; }
-.site-credits { margin-block-end: 0; }
 .screen-reader-text { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0; }
 .skip-link:focus { position: fixed; inset: 1rem auto auto 1rem; width: auto; height: auto; padding: .75rem 1rem; margin: 0; overflow: visible; clip-path: none; white-space: normal; background: var(--color-background); z-index: 100000; }
 
