@@ -30,7 +30,7 @@ function githeme_save_page_title( $post_id ) {
 	if ( ! isset( $_POST['githeme_page_title_nonce'] ) || ! is_string( $_POST['githeme_page_title_nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['githeme_page_title_nonce'] ) ), 'githeme_page_title_' . $post_id ) || ! current_user_can( 'edit_post', $post_id ) ) {
 		return;
 	}
-	if ( isset( $_POST['githeme_hide_page_title'] ) && is_string( $_POST['githeme_hide_page_title'] ) && '1' === wp_unslash( $_POST['githeme_hide_page_title'] ) ) {
+	if ( isset( $_POST['githeme_hide_page_title'] ) && is_string( $_POST['githeme_hide_page_title'] ) && '1' === sanitize_text_field( wp_unslash( $_POST['githeme_hide_page_title'] ) ) ) {
 		update_post_meta( $post_id, '_githeme_hide_page_title', '1' );
 	} else {
 		delete_post_meta( $post_id, '_githeme_hide_page_title' );
