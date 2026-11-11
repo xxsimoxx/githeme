@@ -71,6 +71,10 @@ label { display: inline-block; }
 .entry-content > * { max-width: var(--width-content); margin-inline: auto; }
 .entry-content > .alignwide { max-width: var(--width-wide); }
 .entry-content > .alignfull { max-width: 100%; }
+/* Opt-in builder rows: widen their parent, then retain the editorial width of ordinary rows. */
+.entry-content > .fxb-container:has(> .fxb-row.fxb-default.githeme-wide) { max-width: var(--width-layout); }
+.entry-content > .fxb-container:has(> .fxb-row.fxb-default.githeme-wide) > .fxb-row.fxb-default:not(.githeme-wide) { max-width: var(--width-content); margin-inline: auto; }
+.entry-content > .fxb-container > .fxb-row.fxb-default.githeme-wide { max-width: var(--width-layout); margin-inline: auto; }
 .site-header { background: var(--color-header-background); border-block-end: 1px solid var(--color-border); }
 .header-inner { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: var(--space); padding-block: var(--space); }
 .site-branding { min-width: 0; max-width: 100%; }

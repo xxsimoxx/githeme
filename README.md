@@ -46,6 +46,12 @@ Both areas are optional and appear only on the static front page—not on the la
 
 A native **Text** widget can also contain a [gallery slider](#native-gallery-slider), including in Homepage Hero.
 
+## Optional wide FX Builder rows
+
+Use **Row Settings → Width: Default → Additional CSS class(es): `githeme-wide`** to extend an FX Builder row to the maximum layout width configured in the Customizer (`--width-layout`). The row stays centered within the available content area and shrinks on small screens. Default rows without the class retain the editorial content width; Full Width rows keep the plugin’s native behavior. Columns, gaps, padding, and responsive breakpoints remain controlled by FX Builder.
+
+This optional CSS integration requires a browser supporting `:has()`. Without that support, the row remains constrained by its normal editorial-width container. It adds no required plugin dependency or Customizer setting.
+
 ## Per-page title visibility
 
 In the page editor, enable **Hide page title** in the **Page title** box to omit the template heading for that page. Titles are visible by default. This does not change the saved title, document title, headings in the content, or builder-generated headings. Posts and archives are unaffected. Autosaves and revisions do not overwrite this page preference.
