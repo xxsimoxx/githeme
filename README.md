@@ -46,6 +46,10 @@ Both areas are optional and appear only on the static front page—not on the la
 
 A native **Text** widget can also contain a [gallery slider](#native-gallery-slider), including in Homepage Hero.
 
+## Per-page title visibility
+
+In the page editor, enable **Hide page title** in the **Page title** box to omit the template heading for that page. Titles are visible by default. This does not change the saved title, document title, headings in the content, or builder-generated headings. Posts and archives are unaffected. Autosaves and revisions do not overwrite this page preference.
+
 ## Category archives
 
 Category archives use a responsive card grid: three columns on desktop, two on tablet, and one on mobile, adapting to the available container width. Cards display a 16:9 featured image, a title, and the native excerpt, preferring a manual excerpt when provided. Posts without a featured image remain readable cards without artificial placeholders.
