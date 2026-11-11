@@ -13,3 +13,4 @@ require_once get_template_directory() . '/inc/customizer.php';
 require_once get_template_directory() . '/inc/gallery.php';
 require_once get_template_directory() . '/inc/category.php';
 require_once get_template_directory() . '/inc/page-title.php';
+require_once get_template_directory() . '/inc/class-githeme-featured-posts-widget.php';

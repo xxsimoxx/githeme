@@ -46,6 +46,14 @@ Both areas are optional and appear only on the static front page—not on the la
 
 A native **Text** widget can also contain a [gallery slider](#native-gallery-slider), including in Homepage Hero.
 
+## Featured Posts widget
+
+Add **GiTheme – Featured Posts** through **Appearance → Widgets** to Homepage Hero, Homepage Content, Footer, or another registered widget area. It reuses the category archive cards and adapts to the available width, with up to three columns. No plugin is required.
+
+Choose **Latest published posts**, **Posts in a category** (including its descendants), or **Manual post IDs**. Automatic modes default to three posts and accept 1–50; manual mode uses the comma-separated IDs in the supplied order and ignores the automatic count. Only published posts are shown. Duplicate, missing, unpublished, or non-post IDs are skipped; empty results produce no widget output. The widget title is optional.
+
+Category mode labels cards within the selected category branch, falling back to that category. The other modes use the deepest assigned category, choosing the lowest term ID on equal depths. Cards retain native excerpts and omit the image area when no featured image is available. No separate visual settings are added.
+
 ## Optional wide FX Builder rows
 
 Use **Row Settings → Width: Default → Additional CSS class(es): `githeme-wide`** to extend an FX Builder row to the maximum layout width configured in the Customizer (`--width-layout`). The row stays centered within the available content area and shrinks on small screens. Default rows without the class retain the editorial content width; Full Width rows keep the plugin’s native behavior. Columns, gaps, padding, and responsive breakpoints remain controlled by FX Builder.

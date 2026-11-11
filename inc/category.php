@@ -13,8 +13,8 @@ function githeme_category_page_size( $query ) {
 }
 add_action( 'pre_get_posts', 'githeme_category_page_size' );
 
-/** Choose an assigned descendant of the current category, deepest first, falling back to the archive category. */
-function githeme_category_card_term( $post_id, $category_id ) {
+/** Choose the deepest assigned category, constrained to the archive branch when supplied. */
+function githeme_category_card_term( $post_id, $category_id = 0 ) {
 	$selected = null;
 	$current = null;
 	$depth = 0;
@@ -24,10 +24,10 @@ function githeme_category_card_term( $post_id, $category_id ) {
 		}
 		$ancestors = array_map( 'intval', get_ancestors( $term->term_id, 'category', 'taxonomy' ) );
 		$position = array_search( (int) $category_id, $ancestors, true );
-		if ( (int) $term->term_id === (int) $category_id || false === $position ) {
+		if ( $category_id > 0 && ( (int) $term->term_id === (int) $category_id || false === $position ) ) {
 			continue;
 		}
-		$distance = $position + 1;
+		$distance = $category_id > 0 ? $position + 1 : count( $ancestors ) + 1;
 		if ( $distance > $depth || ( $distance === $depth && $selected && $term->term_id < $selected->term_id ) ) {
 			$selected = $term;
 			$depth = $distance;
@@ -36,6 +36,6 @@ function githeme_category_card_term( $post_id, $category_id ) {
 	if ( $selected ) {
 		return $selected;
 	}
-	$current = $current ?: get_term( $category_id, 'category' );
+	$current = $current ?: ( $category_id > 0 ? get_term( $category_id, 'category' ) : null );
 	return $current instanceof WP_Term ? $current : null;
 }
