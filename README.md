@@ -92,6 +92,12 @@ Use the shortcode in a Text widget to place a slider in a [homepage widget area]
 
 Slider enhancement requires PHP’s DOM extension and recognizable native gallery markup. Empty, single-image, and feed output stays native; plugins that replace gallery markup may prevent enhancement.
 
+## Gallery Slider widget
+
+Add **GiTheme – Gallery Slider** through **Appearance → Widgets**, then enter an optional title and comma-separated **image attachment IDs** in the desired order. It works in any registered widget area without requiring a builder plugin and can be used alongside FX Builder Widgets.
+
+The widget renders the same native `[gallery layout="slider"]` shortcode described above: large images by default, shared responsive layout, keyboard enhancement, previous/next controls, reduced-motion support, and native scrolling without JavaScript. Missing, deleted, duplicate, and non-image IDs are skipped. Empty selections produce no widget output; a single valid image stays a static native gallery. Slider JavaScript is enqueued only when the existing renderer enhances a gallery, once per page even with multiple widgets. Native Gallery widgets and ordinary gallery shortcodes remain unchanged.
+
 ## Compatibility and accessibility
 
 Development and regression testing have been carried out with **PHP 8.2** and a **ClassicPress 2.7.4+dev** checkout containing the Customizer changes intended for ClassicPress 2.8. These are tested environment details, **not minimum version requirements or a general compatibility guarantee**.
