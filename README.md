@@ -46,6 +46,14 @@ Both areas are optional and appear only on the static front page—not on the la
 
 A native **Text** widget can also contain a [gallery slider](#native-gallery-slider), including in Homepage Hero.
 
+## Category archives
+
+Category archives use a responsive card grid: three columns on desktop, two on tablet, and one on mobile, adapting to the available container width. Cards display a 16:9 featured image, a title, and the native excerpt, preferring a manual excerpt when provided. Posts without a featured image remain readable cards without artificial placeholders.
+
+An image overlay names the most specific assigned subcategory relevant to the current archive, or the current category when no such subcategory is assigned. Colors and typography follow the theme settings. Centered native pagination shows 12 posts per page.
+
+This layout applies only to category archives; other archive types keep their existing presentation.
+
 ## Native gallery slider
 
 Add `layout="slider"` to the native gallery shortcode in the classic editor or a native **Text** widget:
