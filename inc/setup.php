@@ -63,9 +63,9 @@ function githeme_register_widget_areas() {
 	}
 	register_sidebar(
 		array(
-			'name'          => __( 'Footer — experimental', 'githeme' ),
+			'name'          => __( 'Footer', 'githeme' ),
 			'id'            => 'footer-experimental',
-			'description'   => __( 'Optional widgets displayed before the site footer credits.', 'githeme' ),
+			'description'   => __( 'Optional widgets displayed in the site footer.', 'githeme' ),
 			'before_widget' => '<section id="%1$s" class="widget %2$s">',
 			'after_widget'  => '</section>',
 			'before_title'  => '<h2 class="widget-title">',
