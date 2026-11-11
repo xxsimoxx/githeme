@@ -13,7 +13,7 @@
 
 /* The renderer exposes explicit button colors through these inline variables.
  * Leave either customization entirely under the plugin's hover rules.
- * Text buttons retain their transparent, underlined interaction variant.
+ * Text buttons retain their transparent interaction variant.
  */
 .fx-button:not(.fx-button--text):not([style*="--fx-button-bg"]):not([style*="--fx-button-color"]):is(:hover, :focus-visible) {
 	background-color: var(--color-secondary);
@@ -22,6 +22,10 @@
 .fx-button--outline:not([style*="--fx-button-bg"]):not([style*="--fx-button-color"]):is(:hover, :focus-visible) {
 	border-color: var(--color-secondary);
 }
+
+/* Button variants use their shape and focus treatment rather than text underlines. */
+.fx-button, .fx-button:hover, .fx-button:focus { text-decoration: none; }
+.fx-button--text:hover { border-color: currentColor; }
 
 .fx-card {
 	background: var(--color-footer-background);
