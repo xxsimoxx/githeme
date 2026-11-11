@@ -4,7 +4,7 @@ Materiale tecnico del checkout completo; gli strumenti di test non sono dipenden
 
 ## Ambiente e compatibilità
 
-PHP 8.2 è il riferimento di sviluppo. Versioni minime e matrice di compatibilità non sono ancora definite; non dedurre compatibilità generale da una singola installazione.
+I requisiti minimi dichiarati sono ClassicPress 2.7 e PHP 8.2. Il manutentore ha accettato ClassicPress 2.7 dopo una verifica manuale dei controlli Customizer, distinta dai test automatici. I test funzionali automatizzati su 2.7.0 non sono stati completati per indisponibilità del database isolato; non è dichiarata una matrice completa di compatibilità.
 
 Ambiente della regressione di riferimento: PHP 8.2.13 e ClassicPress `2.7.4+dev`, branch `fix/customizer-regressions` derivato da `develop`, SHA `79193cbb98bb4bd4a286cc37cba1a221940396f0`, con riscrittura Customizer destinata a 2.8. Sono dati del contesto verificato, non requisiti di installazione del tema o garanzia per ogni build di quel branch. MAMP Pro è stato usato per l'esecuzione locale; non è richiesto dal tema.
 
@@ -12,11 +12,11 @@ Per i comandi che seguono, la radice di lavoro è un checkout ClassicPress con s
 
 ## Checkout, ZIP e controlli del progetto
 
-Lo ZIP installabile generato dal workflow di release contiene il tema e le licenze dei font. Esclude `tests/` e `.github/` tramite `.gitattributes`.
+Lo ZIP installabile generato dal workflow di release contiene il tema e le licenze dei font. Esclude `tests/`, `docs/` e `.github/` tramite `.gitattributes`.
 
 Per eseguire i test utilizzare un checkout completo del [repository di sviluppo](https://github.com/xxsimoxx/githeme), che include gli script PHP, JavaScript e Selenium. I comandi di verifica descritti qui richiedono quel checkout e gli strumenti di sviluppo indicati; non sono eseguibili dal solo ZIP installabile. Questi strumenti non sono dipendenze del tema in produzione.
 
-Lo ZIP usa `git archive` nel workflow `.github/workflows/zip.yml`, attivato alla pubblicazione di una release. Le esclusioni effettive sono in `.gitattributes`, compreso `AGENTS.md`; i nuovi documenti `docs/` non sono attualmente esclusi. I riferimenti ai test in questi documenti sono destinati al checkout completo, non al contenuto ridotto dello ZIP. Non sono state modificate regole di packaging o workflow.
+Lo ZIP usa `git archive` nel workflow `.github/workflows/zip.yml`, attivato alla pubblicazione di una release. Le esclusioni effettive sono in `.gitattributes`, compresi `AGENTS.md`, `docs/` e i file operativi elencati. Il README, lo screenshot, i componenti runtime e le licenze dei font rimangono inclusi. I riferimenti ai test in questi documenti sono destinati al checkout completo, non al contenuto ridotto dello ZIP. Non sono state modificate regole di packaging o workflow.
 
 Il workflow `.github/workflows/cpcs.yml` esegue i ClassicPress Directory Coding Standards su push/PR ed esclude `tests/`. Non equivale all'esecuzione delle suite funzionali seguenti. Non installare dipendenze automaticamente per eseguire i controlli.
 
@@ -126,6 +126,12 @@ wp --path=src --skip-plugins eval-file src/wp-content/themes/githeme/tests/fx-sh
 Il primo copre le otto combinazioni logo/titolo/motto, sfondi e controlli con override in memoria. Il test FX verifica dipendenza opzionale e contrasto senza salvare opzioni. Usare anche lint PHP 8.2, `node --check` per gli script JavaScript, parsing/sintassi Python senza artefatti nel repository e `git diff --check`. Non dichiarare superato un controllo non eseguito.
 
 Per la regressione frontend includere homepage, pagina e articolo, cinque componenti FX, viewport 1440/1280/768/390/320, assenza di overflow, tastiera, focus, menu senza JS, console/rete e nuovi errori PHP. Il test del solo contrasto non copre tutti i controlli del Customizer: verificare separatamente anteprima/pubblicazione/persistenza di font, larghezze, header e identità. Le verifiche manuali residue sono in [Accessibilità](accessibility.md).
+
+## Verifiche mirate introdotte in 0.5.0
+
+Le suite PHP `tests/gallery-slider.php`, `tests/gallery-widget.php`, `tests/featured-posts.php`, `tests/category-archives.php`, `tests/footer.php` e `tests/page-title-integration.php` si eseguono con `wp eval-file` nel checkout ClassicPress. Usano letture e fixture in memoria; richiedono contenuti locali esistenti secondo gli script. `tests/page-title.php` è invece un test isolato eseguibile direttamente con PHP.
+
+Le corrispondenti verifiche browser e quelle per tipografia e `githeme-wide` usano Firefox/Selenium già disponibili e gli artifact esterni. Le fixture DOM non equivalgono all'aggiunta e al salvataggio di un widget in amministrazione. La configurazione/persistenza di Featured Posts è stata confermata manualmente dal manutentore; per Gallery Slider sono confermati resa visiva e più istanze indipendenti, mentre il ciclo manuale configurazione/salvataggio/ricaricamento resta da verificare.
 
 ## Compatibilità del Customizer
 

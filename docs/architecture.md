@@ -6,11 +6,16 @@ Tema classico PHP per ClassicPress, senza framework, build obbligatoria, Gutenbe
 
 | Percorso | Responsabilità |
 |---|---|
-| `functions.php` | Carica impostazioni, setup e Customizer. |
+| `functions.php` | Carica impostazioni, setup, Customizer, gallerie, categorie, controllo del titolo e widget. |
 | `inc/setup.php` | Supporti del tema, menu, asset e registrazione delle aree widget. |
 | `inc/settings.php` | Valori validati, contrasto, font, proprietà CSS ed editor classico. |
 | `inc/customizer.php` | Registrazione, validazione, avvisi e asset informativi. |
-| `inc/class-githeme-*.php` | Controlli che possiedono il proprio markup e usano il binding pubblico. |
+| `inc/class-githeme-*-control.php` | Controlli Customizer con markup proprio e binding pubblico. |
+| `inc/gallery.php`, `assets/js/gallery-slider.js` | Wrapper opzionale della galleria nativa e navigazione progressiva. |
+| `inc/category.php`, `category.php` | Query principale delle categorie e griglia dedicata. |
+| `template-parts/content-category-card.php` | Card condivise fra archivi e Featured Posts. |
+| `inc/page-title.php` | Meta box e preferenza del titolo delle sole pagine. |
+| `inc/class-githeme-*-widget.php` | Widget nativi Featured Posts e Gallery Slider. |
 | `header.php`, `footer.php` | Header/footer condivisi e inserimento condizionale delle aree homepage. |
 | `page.php`, `single.php` | Rendering dei contenuti singoli tramite `template-parts/content-singular.php`. |
 | `index.php`, `404.php`, `comments.php` | Elenchi, archivi/ricerca, pagina mancante e commenti. |
@@ -38,7 +43,7 @@ La superficie derivata usa secondario e sfondo (6%/94%). Il footer utilizza inve
 
 ## Asset ed editor
 
-`githeme_enqueue_assets()` usa le API native. CSS frontend, navigazione, foglio dell'editor classico e integrazione FX usano la versione di `style.css` per la cache; gli asset informativi del Customizer usano `filemtime()`.
+`githeme_enqueue_assets()` usa le API native. CSS frontend, navigazione, foglio dell'editor classico e integrazione FX usano la versione di `style.css` per la cache; gli asset informativi del Customizer usano `filemtime()`. Anche lo script dello slider usa la versione del tema ed è accodato solo dal rendering di una galleria effettivamente migliorata, senza duplicazioni fra shortcode e widget.
 
 `githeme_editor_settings()` aggiunge font e proprietà a `content_style` tramite `tiny_mce_before_init` e `teeny_mce_before_init`, conservando l'eventuale stile precedente. Le virgolette doppie del solo CSS generato vengono sostituite con singole prima dell'aggiunta, per evitare l'errore di inizializzazione TinyMCE con famiglie come “Segoe UI”. Il foglio `assets/css/editor.css` non carica il layout del frontend nell'editor.
 
@@ -67,3 +72,9 @@ La sola integrazione grafica dedicata riguarda i cinque componenti descritti in 
 ## Licenze
 
 Il codice è GPL-3.0-or-later, come indicato in [LICENSE](../LICENSE). I font mantengono SIL OFL 1.1, con licenze nelle rispettive directory e [provenienza documentata](../assets/fonts/SOURCES.md).
+
+## Componenti condivisi di 0.5.0
+
+Featured Posts usa lo stesso template e gli stessi stili delle categorie; soltanto query, ID e livello del titolo della card dipendono dal contesto. Gallery Slider invoca una volta il normale shortcode gallery, senza una seconda implementazione. Il filtro `shortcode_atts_gallery` fornisce `large` solo agli slider privi di `size`; `do_shortcode_tag` conserva l'HTML nativo e lo avvolge soltanto se riconoscibile. In assenza di DOM o con output incompatibile resta il rendering nativo.
+
+La tipografia editoriale ha un blocco CSS condiviso fra frontend ed editor, con breakpoint a 48rem e valori derivati dalle variabili esistenti; titoli di widget e componenti mantengono le proprie regole. `githeme-wide` amplia solo i contenitori con righe Default esplicitamente abilitate e conserva la larghezza editoriale delle altre righe. Non vengono introdotte API JavaScript del Customizer o dipendenze dai plugin.

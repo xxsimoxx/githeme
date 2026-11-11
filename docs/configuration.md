@@ -62,7 +62,7 @@ Il flag del motto viene inizializzato da `githeme_initialize_identity_visibility
 1. Attivare githeme da Aspetto → Temi.
 2. Assegnare il menu alla posizione “Primary menu” e configurare eventualmente il logo in Identità del sito.
 3. Per una homepage statica scegliere una normale pagina nelle impostazioni di lettura.
-4. L'area “Footer — experimental” è facoltativa e configurabile tramite le normali API widget.
+4. L'area “Footer” è facoltativa e configurabile tramite le normali API widget; l'ID stabile resta `footer-experimental`. Senza output dei widget non viene generata una fascia vuota né vengono aggiunti crediti automatici.
 
 ## Homepage statica e widget
 
@@ -70,10 +70,16 @@ Il flag del motto viene inizializzato da `githeme_initialize_identity_visibility
 2. In Impostazioni → Lettura selezionare una pagina iniziale statica e assegnare quella pagina; scegliere eventualmente una pagina distinta per gli articoli.
 3. In Aspetto → Widget, oppure nelle aree widget del Customizer, aggiungere widget a **Homepage Hero** e/o **Homepage Content**.
 
-L’ordine è header, Homepage Hero, contenuto della pagina, Homepage Content, footer. Le due aree sono indipendenti e opzionali: senza widget non producono contenitori vuoti. La homepage continua a mostrare il normale contenuto della pagina, con il suo titolo. Usare titoli di livello 2 per i widget e una gerarchia coerente nei loro contenuti.
+L’ordine è header, Homepage Hero, contenuto della pagina, Homepage Content, footer. Le due aree sono indipendenti e opzionali: senza widget non producono contenitori vuoti. La homepage continua a mostrare il normale contenuto della pagina; il titolo del template è visibile per default e può essere nascosto con “Hide page title” nell’editor della singola pagina. Usare titoli di livello 2 per i widget e una gerarchia coerente nei loro contenuti.
 
 Hero dispone dell’intera larghezza della viewport; il widget decide il proprio layout interno. Homepage Content rispetta la larghezza massima del layout configurata nel tema. Colori, tipografia e larghezze continuano a usare le impostazioni globali. Contenuti di terze parti possono richiedere propri accorgimenti responsive.
 
 Gli ID stabili delle aree sono `homepage-hero` e `homepage-content`. Funzionano tramite `register_sidebar()` e `dynamic_sidebar()`, senza API specifiche dei plugin. Non appaiono nella homepage con gli ultimi articoli, nella pagina separata degli articoli, nelle pagine interne o negli articoli singoli.
 
 Non viene aggiunto `front-page.php`: restano valide la gerarchia nativa e i template assegnati alle pagine che utilizzano header e footer standard del tema. Template esterni che sostituiscono completamente header/footer devono gestire autonomamente il rendering. Non sono introdotti ordinamenti proprietari, nuove opzioni Customizer o sistemi di sezioni.
+
+## Funzionalità introdotte in 0.5.0
+
+Il [README](../README.md) descrive i widget nativi GiTheme – Featured Posts e GiTheme – Gallery Slider, le modalità di selezione, gli archivi di categoria a 12 articoli per pagina e lo shortcode `[gallery layout="slider"]`. I widget riutilizzano card e gallerie esistenti, senza opzioni estetiche aggiuntive. Le righe Default di FX Builder possono usare `githeme-wide` per raggiungere `--width-layout`; non cambia la larghezza `--width-wide` né il rendering Full Width del plugin.
+
+“Hide page title” usa il post meta `_githeme_hide_page_title` soltanto sulle pagine. Non altera titolo salvato, document title o heading del contenuto; autosave e revisioni non riscrivono la preferenza. La tipografia editoriale responsive e i margini condivisi con il Classic Editor rispettano la dimensione base e la scala configurate, senza cambiare i livelli semantici.

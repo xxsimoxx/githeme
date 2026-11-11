@@ -6,7 +6,7 @@ Il tema continua a funzionare senza il plugin. `githeme_enqueue_fx_shortcodes_st
 
 | Componente | Integrazione |
 |---|---|
-| Button | Primario e `--color-button-text`; hover/focus-visible fill e outline sul secondario, con `--color-button-hover-text` calcolato per il contrasto. Text resta trasparente e conserva l'interazione del plugin. Dimensioni e varianti non vengono riscritte. |
+| Button | Primario e `--color-button-text`; hover/focus-visible fill e outline sul secondario, con `--color-button-hover-text` calcolato per il contrasto. Text resta trasparente, senza sottolineatura; in hover il bordo diventa visibile. Il focus mantiene il proprio indicatore. Dimensioni e varianti non vengono riscritte. |
 | Card | Sfondo `--color-footer-background`, testo ereditato, bordo `--color-border`, angoli discreti e ombra derivata da `--color-text`. Immagini e proporzioni del plugin preservate. |
 | Cover | Sfondo predefinito `--color-background`, testo ereditato e padding responsive. Struttura, immagine e overlay restano del plugin. Gli elementi annidati conservano le proprie regole. |
 | Details | Sfondo `--color-background`, bordo `--color-border`, testo ereditato, hover/focus discreto da `currentColor`; comportamento nativo di apertura/chiusura. |

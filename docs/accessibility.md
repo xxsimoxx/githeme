@@ -30,6 +30,8 @@ Atkinson Hyperlegible Next è una delle scelte disponibili; non è imposto e la 
 
 Non sono necessarie animazioni per usare la navigazione. Il foglio opzionale FX elimina le transizioni dei pulsanti con `prefers-reduced-motion: reduce`; l'indicatore Details non richiede una transizione. Plugin e contenuti esterni possono avere preferenze proprie da verificare.
 
+Lo slider nativo usa Scroll Snap e scorrimento orizzontale senza autoplay. Con JavaScript aggiunge pulsanti nominati e corregge la visibilità delle immagini focalizzate; il movimento ridotto rende immediati gli spostamenti dei pulsanti. Senza script restano link e scorrimento nativo: Firefox può lasciare un'immagine focalizzata parzialmente visibile finché l'utente non scorre. Le immagini fuori schermo non vengono nascoste alle tecnologie assistive.
+
 ## Verifiche che richiedono una persona
 
 - Attivazione, pagine/articoli, elenchi, ricerca, 404 e contenuti protetti da password.

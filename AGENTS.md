@@ -14,7 +14,7 @@
 ## Architettura
 
 - Tema classico PHP generalista, senza Gutenberg, framework, build obbligatoria o dipendenze da plugin.
-- PHP 8.2 è il riferimento di sviluppo. La matrice minima ClassicPress/PHP non è ancora definita: non dichiararla senza accordo e verifiche.
+- Requisiti minimi dichiarati: ClassicPress 2.7 e PHP 8.2. PHP 8.2 è il riferimento di sviluppo; non dedurre una matrice completa di compatibilità dai soli requisiti minimi.
 - HTML semantico, CSS con custom properties, Grid/Flexbox e JavaScript vanilla progressivo.
 - Obiettivo WCAG 2.2 AA, responsive, prestazioni e SEO tecnico; nessuna dichiarazione di conformità senza verifica.
 - Nessun template, componente o impostazione legato a singoli siti, marchi o settori di attività: il tema rimane generalista.
