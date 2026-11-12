@@ -1,0 +1,447 @@
+# Translation template for GiTheme. Distributed under the GNU General Public License v3 or later.
+msgid ""
+msgstr ""
+"Project-Id-Version: GiTheme 0.5.0\n"
+"Report-Msgid-Bugs-To: https://github.com/xxsimoxx/githeme/issues\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: WP-CLI 2.11.0\n"
+"X-Domain: githeme\n"
+
+#. Theme Name of the theme
+#: style.css
+msgid "GiTheme"
+msgstr ""
+
+#. Description of the theme
+#: style.css
+msgid "A lightweight, general-purpose classic theme for ClassicPress."
+msgstr ""
+
+#: 404.php:11
+msgid "Page not found"
+msgstr ""
+
+#: 404.php:12
+msgid "Try searching the site or return to the homepage."
+msgstr ""
+
+#: 404.php:14
+msgid "Go to the homepage"
+msgstr ""
+
+#: category.php:20
+#: index.php:34
+msgid "No content found."
+msgstr ""
+
+#: comments.php:12
+#: comments.php:14
+msgid "Comments"
+msgstr ""
+
+#: comments.php:21
+msgid "Comments are closed."
+msgstr ""
+
+#: header.php:19
+msgid "Skip to content"
+msgstr ""
+
+#: header.php:32
+#: inc/setup.php:16
+msgid "Primary menu"
+msgstr ""
+
+#: header.php:33
+msgid "Menu"
+msgstr ""
+
+#: inc/class-githeme-contrast-control.php:31
+msgid "WCAG AA reference for normal-size text. These results do not assess logos, icons, component borders or the whole site."
+msgstr ""
+
+#: inc/class-githeme-contrast-control.php:43
+msgid "Button text uses whichever of black or white has better contrast. Results are compared before rounding. Link identification, hover states and plugin styles need separate checks. Contrast advice does not block saving."
+msgstr ""
+
+#: inc/class-githeme-contrast-control.php:44
+msgid "Values shown were calculated when this screen loaded. Reload after saving to check updated results."
+msgstr ""
+
+#: inc/class-githeme-featured-posts-widget.php:8
+msgid "GiTheme – Featured Posts"
+msgstr ""
+
+#: inc/class-githeme-featured-posts-widget.php:8
+msgid "Post cards selected by date, category, or an ordered list of IDs."
+msgstr ""
+
+#: inc/class-githeme-featured-posts-widget.php:108
+#: inc/class-githeme-gallery-slider-widget.php:66
+msgid "Title (optional)"
+msgstr ""
+
+#: inc/class-githeme-featured-posts-widget.php:110
+msgid "Selection"
+msgstr ""
+
+#: inc/class-githeme-featured-posts-widget.php:112
+msgid "Latest published posts"
+msgstr ""
+
+#: inc/class-githeme-featured-posts-widget.php:112
+msgid "Posts in a category"
+msgstr ""
+
+#: inc/class-githeme-featured-posts-widget.php:112
+msgid "Manual post IDs"
+msgstr ""
+
+#: inc/class-githeme-featured-posts-widget.php:116
+msgid "Category (category mode)"
+msgstr ""
+
+#: inc/class-githeme-featured-posts-widget.php:117
+msgid "Select a category"
+msgstr ""
+
+#: inc/class-githeme-featured-posts-widget.php:118
+msgid "Number of posts (automatic modes, 1–50)"
+msgstr ""
+
+#: inc/class-githeme-featured-posts-widget.php:120
+msgid "Post IDs (manual mode)"
+msgstr ""
+
+#: inc/class-githeme-featured-posts-widget.php:122
+msgid "Comma-separated IDs, displayed in this order. Missing or unpublished posts are skipped; the automatic count is ignored."
+msgstr ""
+
+#: inc/class-githeme-gallery-slider-widget.php:8
+msgid "GiTheme – Gallery Slider"
+msgstr ""
+
+#: inc/class-githeme-gallery-slider-widget.php:8
+msgid "A native gallery slider using an ordered list of image attachment IDs."
+msgstr ""
+
+#: inc/class-githeme-gallery-slider-widget.php:68
+msgid "Image attachment IDs"
+msgstr ""
+
+#: inc/class-githeme-gallery-slider-widget.php:70
+msgid "Comma-separated attachment IDs, displayed in this order. Missing, deleted, and non-image attachments are skipped. One image remains a static gallery."
+msgstr ""
+
+#: inc/customizer.php:21
+msgid "Enter a hexadecimal color such as #14569a."
+msgstr ""
+
+#: inc/customizer.php:34
+msgid "Choose one of the available options."
+msgstr ""
+
+#. translators: 1: minimum value, 2: maximum value, in rem.
+#: inc/customizer.php:50
+msgid "Enter a number from %1$s to %2$s rem."
+msgstr ""
+
+#. translators: %s: allowed increment in rem.
+#: inc/customizer.php:53
+msgid "Use increments of %s rem."
+msgstr ""
+
+#: inc/customizer.php:76
+msgid "Content width must not exceed wide width, and wide width must not exceed maximum layout width."
+msgstr ""
+
+#: inc/customizer.php:90
+msgid "Saved widths are invalid. Safe limits are applied only when rendering; saved values have not been changed."
+msgstr ""
+
+#: inc/customizer.php:94
+msgid "Saved widths are inconsistent. Safe limits are applied only when rendering; saved values have not been changed."
+msgstr ""
+
+#: inc/customizer.php:100
+msgid "Choose whether to display this item."
+msgstr ""
+
+#: inc/customizer.php:114
+msgid "Colors"
+msgstr ""
+
+#: inc/customizer.php:115
+msgid "Global colors for theme elements. Contrast advice is informational and never prevents saving."
+msgstr ""
+
+#: inc/customizer.php:132
+msgid "Primary color"
+msgstr ""
+
+#: inc/customizer.php:133
+msgid "Secondary color"
+msgstr ""
+
+#: inc/customizer.php:134
+msgid "Text color"
+msgstr ""
+
+#: inc/customizer.php:135
+msgid "Background color"
+msgstr ""
+
+#: inc/customizer.php:136
+msgid "Link color"
+msgstr ""
+
+#: inc/customizer.php:137
+msgid "Header background"
+msgstr ""
+
+#: inc/customizer.php:138
+msgid "Footer background"
+msgstr ""
+
+#: inc/customizer.php:156
+msgid "Show site title"
+msgstr ""
+
+#: inc/customizer.php:157
+msgid "Show tagline"
+msgstr ""
+
+#: inc/customizer.php:162
+msgid "Without a logo, the site title is always displayed."
+msgstr ""
+
+#: inc/customizer.php:162
+msgid "Visibility is independent of the logo. Existing configured taglines stay enabled until you uncheck this option and publish."
+msgstr ""
+
+#: inc/customizer.php:166
+msgid "Typography"
+msgstr ""
+
+#: inc/customizer.php:169
+msgid "Font family"
+msgstr ""
+
+#: inc/customizer.php:170
+msgid "System font stack"
+msgstr ""
+
+#: inc/customizer.php:171
+msgid "Included fonts are served locally. Only the selected family is used."
+msgstr ""
+
+#: inc/customizer.php:174
+msgid "Base text size (rem)"
+msgstr ""
+
+#: inc/customizer.php:174
+msgid "1 rem follows the browser default, usually 16 px. Browser zoom and user font preferences remain available."
+msgstr ""
+
+#: inc/customizer.php:176
+msgid "Heading scale"
+msgstr ""
+
+#: inc/customizer.php:178
+msgid "Dimensions are maximums in rem; all containers shrink to the available space. Required order: content ≤ wide ≤ layout."
+msgstr ""
+
+#: inc/customizer.php:182
+msgid "Widths and layout"
+msgstr ""
+
+#: inc/customizer.php:184
+msgid "Content width (rem)"
+msgstr ""
+
+#: inc/customizer.php:186
+msgid "Wide width (rem)"
+msgstr ""
+
+#: inc/customizer.php:188
+msgid "Maximum layout width (rem)"
+msgstr ""
+
+#: inc/customizer.php:190
+msgid "Header"
+msgstr ""
+
+#: inc/customizer.php:192
+msgid "Maximum logo height (rem)"
+msgstr ""
+
+#: inc/customizer.php:192
+msgid "Original proportions are preserved. Width is limited by the available space."
+msgstr ""
+
+#: inc/customizer.php:194
+msgid "Header arrangement"
+msgstr ""
+
+#: inc/customizer.php:194
+msgid "Identity left, navigation right"
+msgstr ""
+
+#: inc/customizer.php:194
+msgid "Identity centered, navigation below"
+msgstr ""
+
+#: inc/customizer.php:205
+msgid "Color contrast"
+msgstr ""
+
+#: inc/customizer.php:206
+msgid "Text / background"
+msgstr ""
+
+#: inc/customizer.php:207
+msgid "Links / background"
+msgstr ""
+
+#: inc/customizer.php:208
+msgid "Button text / primary"
+msgstr ""
+
+#: inc/customizer.php:209
+#: inc/settings.php:250
+msgid "Header text / background"
+msgstr ""
+
+#: inc/customizer.php:210
+#: inc/settings.php:251
+msgid "Header links / background"
+msgstr ""
+
+#: inc/customizer.php:211
+#: inc/settings.php:252
+msgid "Footer text / background"
+msgstr ""
+
+#: inc/customizer.php:212
+#: inc/settings.php:253
+msgid "Footer links / background"
+msgstr ""
+
+#: inc/customizer.php:213
+msgid "Adequate"
+msgstr ""
+
+#: inc/customizer.php:214
+msgid "Insufficient"
+msgstr ""
+
+#: inc/customizer.php:215
+msgid "Not calculated"
+msgstr ""
+
+#: inc/customizer.php:216
+msgid "Enter a valid hexadecimal color (#RGB or #RRGGBB)."
+msgstr ""
+
+#: inc/customizer.php:217
+msgid "Results update as you edit. Screen reader updates are grouped after a short pause. Contrast advice does not block saving."
+msgstr ""
+
+#. translators: 1: contrast pair label, 2: status, 3: formatted contrast ratio or validation help. Keep the numbered placeholders unchanged. Used in JavaScript screen reader announcements.
+#: inc/customizer.php:219
+msgid "%1$s: %2$s. %3$s"
+msgstr ""
+
+#. translators: 1: contrast ratio, 2: minimum required ratio. Keep the numbered placeholders unchanged. Also used in JavaScript.
+#: inc/customizer.php:221
+msgid "%1$s:1 · minimum %2$s:1"
+msgstr ""
+
+#. translators: 1: foreground hex color, 2: background hex color. Keep the numbered placeholders unchanged. Also used in JavaScript.
+#: inc/customizer.php:223
+msgid "%1$s on %2$s"
+msgstr ""
+
+#: inc/gallery.php:113
+msgid "Previous image"
+msgstr ""
+
+#: inc/gallery.php:114
+msgid "Next image"
+msgstr ""
+
+#: inc/gallery.php:124
+msgid "Scrollable image gallery"
+msgstr ""
+
+#: inc/page-title.php:13
+msgid "Page title"
+msgstr ""
+
+#: inc/page-title.php:21
+msgid "Hide page title"
+msgstr ""
+
+#. translators: 1: contrast ratio, 2: minimum ratio for normal-size text.
+#: inc/settings.php:243
+msgid "Text/background contrast is %1$s:1, below the %2$s:1 target. Saving is allowed."
+msgstr ""
+
+#. translators: 1: contrast ratio, 2: minimum ratio for normal-size text.
+#: inc/settings.php:247
+msgid "Link/background contrast is %1$s:1, below the %2$s:1 target. Saving is allowed."
+msgstr ""
+
+#. translators: 1: contrast pair, 2: ratio, 3: threshold.
+#: inc/settings.php:258
+msgid "%1$s: contrast %2$s:1, below %3$s:1. Saving is allowed."
+msgstr ""
+
+#: inc/setup.php:47
+msgid "Homepage Hero"
+msgstr ""
+
+#: inc/setup.php:48
+msgid "Homepage Content"
+msgstr ""
+
+#: inc/setup.php:55
+msgid "Optional widgets before the static homepage content. Widgets can use the full available width."
+msgstr ""
+
+#: inc/setup.php:56
+msgid "Optional widgets after the static homepage content."
+msgstr ""
+
+#: inc/setup.php:66
+msgid "Footer"
+msgstr ""
+
+#: inc/setup.php:68
+msgid "Optional widgets displayed in the site footer."
+msgstr ""
+
+#. translators: %s: search query.
+#: index.php:15
+msgid "Search results for: %s"
+msgstr ""
+
+#: index.php:21
+msgid "Latest posts"
+msgstr ""
+
+#: index.php:28
+#: template-parts/content-category-card.php:23
+#: template-parts/content-singular.php:14
+msgid "Untitled"
+msgstr ""
+
+#: template-parts/content-singular.php:27
+msgid "Page sections"
+msgstr ""

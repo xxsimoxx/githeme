@@ -14,7 +14,7 @@
 		const ratioFormat = new Intl.NumberFormat(config.locale, {minimumFractionDigits: 2, maximumFractionDigits: 2});
 		const minimumFormat = new Intl.NumberFormat(config.locale, {maximumFractionDigits: 1});
 		let timer, previous = {}, lastAnnounced = {};
-		function format(template, first, second) { return template.replace('%1$s', first).replace('%2$s', second); }
+		function format(template, ...values) { return template.replace(/%([1-3])\$s/g, (placeholder, index) => values[Number(index) - 1]); }
 		function text(node, value) { if (node.textContent !== value) { node.textContent = value; } }
 		function render(announce) {
 			const colors = {};
@@ -32,7 +32,7 @@
 				text(row.querySelector('[data-githeme-icon]'), result.status === 'pass' ? '✓' : (result.status === 'fail' ? '!' : '?'));
 				text(row.querySelector('[data-githeme-ratio]'), ratio);
 				text(row.querySelector('[data-githeme-pair]'), result.ratio === null ? '' : format(strings.pair, result.foreground, result.background));
-				summaries[key] = strings[key] + ': ' + strings[result.status] + '. ' + ratio;
+				summaries[key] = format(strings.summary, strings[key], strings[result.status], ratio);
 			});
 			const changed = Object.keys(summaries).some(key => summaries[key] !== previous[key]);
 			previous = summaries;

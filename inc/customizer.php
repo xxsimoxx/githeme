@@ -215,9 +215,11 @@ function githeme_contrast_strings() {
 		'invalid'     => __( 'Not calculated', 'githeme' ),
 		'invalidHelp' => __( 'Enter a valid hexadecimal color (#RGB or #RRGGBB).', 'githeme' ),
 		'liveHelp'    => __( 'Results update as you edit. Screen reader updates are grouped after a short pause. Contrast advice does not block saving.', 'githeme' ),
-		/* translators: 1: contrast ratio, 2: minimum required ratio. */
+		/* translators: 1: contrast pair label, 2: status, 3: formatted contrast ratio or validation help. Keep the numbered placeholders unchanged. Used in JavaScript screen reader announcements. */
+		'summary'     => __( '%1$s: %2$s. %3$s', 'githeme' ),
+		/* translators: 1: contrast ratio, 2: minimum required ratio. Keep the numbered placeholders unchanged. Also used in JavaScript. */
 		'ratio'       => __( '%1$s:1 · minimum %2$s:1', 'githeme' ),
-		/* translators: 1: foreground hex color, 2: background hex color. */
+		/* translators: 1: foreground hex color, 2: background hex color. Keep the numbered placeholders unchanged. Also used in JavaScript. */
 		'pair'        => __( '%1$s on %2$s', 'githeme' ),
 	);
 }

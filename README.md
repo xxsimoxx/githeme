@@ -114,6 +114,18 @@ Development and regression testing have been carried out with **PHP 8.2** and a 
 
 Accessibility is a continuing design and testing goal, not a claim of WCAG certification. Automated and browser checks do not replace testing with screen readers, real touch devices, or browser zoom. Site content, color choices, and third-party plugins also affect accessibility.
 
+## Localization
+
+English is the source language; the text domain is `githeme`. Theme translations load from `languages/` through the native ClassicPress translation API. No translations are bundled yet. Site content, saved widget titles, category names, and other user-entered values are not translated by the theme.
+
+To regenerate the translation template, run this command from the theme root with [WP-CLI i18n](https://developer.wordpress.org/cli/commands/i18n/make-pot/) available:
+
+```sh
+wp i18n make-pot . languages/githeme.pot --slug=githeme --domain=githeme --exclude=tests,docs --headers='{"POT-Creation-Date":"","Report-Msgid-Bugs-To":"https://github.com/xxsimoxx/githeme/issues"}' --file-comment="Translation template for GiTheme. Distributed under the GNU General Public License v3 or later."
+```
+
+This scans PHP and JavaScript without loading the site or accessing its database. JavaScript interface messages are translated in PHP and passed to the scripts, so they are included in the same POT; no separate JavaScript translation catalog is needed. Keep numbered placeholders such as `%1$s` unchanged when translating. The empty creation-date header avoids timestamp-only changes when regenerating with the same tooling and sources. WP-CLI is a development tool, not a runtime dependency.
+
 ## License
 
 `githeme` is licensed under **GPL-3.0-or-later**. See [LICENSE](LICENSE). Bundled fonts retain their respective **SIL Open Font License 1.1** terms; their licenses and provenance are included with the font files.
