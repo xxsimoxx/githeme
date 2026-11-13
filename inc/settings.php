@@ -320,6 +320,11 @@ function githeme_custom_properties_css() {
 	if ( githeme_contrast_ratio( $muted, $colors['background'] ) < githeme_contrast_rules()['normalTextMinimum'] ) {
 		$muted = $colors['text'];
 	}
+	// Keep the motto muted only when it passes on its own header surface.
+	$header_muted = githeme_mix_colors( $colors['text'], $colors['header_background'], 0.85 );
+	if ( githeme_contrast_ratio( $header_muted, $colors['header_background'] ) < githeme_contrast_rules()['normalTextMinimum'] ) {
+		$header_muted = $colors['text'];
+	}
 	$properties = array(
 		'color-primary'    => $colors['primary'],
 		'color-secondary'  => $colors['secondary'],
@@ -332,6 +337,7 @@ function githeme_custom_properties_css() {
 		'color-button-hover-text' => githeme_button_text_color( $colors['secondary'] ),
 		'color-surface'    => githeme_mix_colors( $colors['secondary'], $colors['background'], 0.06 ),
 		'color-muted'      => $muted,
+		'color-header-muted' => $header_muted,
 		'color-border'     => githeme_mix_colors( $colors['text'], $colors['background'], 0.6 ),
 		'font-body'        => githeme_font_stack(),
 		'font-size-base'   => githeme_get_number( 'githeme_font_size' ) . 'rem',

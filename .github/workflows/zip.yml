@@ -2,6 +2,8 @@ name: Generate Installable Plugin or Theme, and Upload as Release Asset
 on:
   release:
     types: [published]
+permissions:
+  contents: write
 jobs:
   build:
     name: Upload Release Asset
@@ -23,7 +25,7 @@ jobs:
             name: ${{ github.event.repository.name }}-${{ github.ref_name }}
             path: ${{ github.event.repository.name }}-${{ github.ref_name }}.zip
       - name: Upload to release
-        uses: JasonEtco/upload-to-release@master
+        uses: JasonEtco/upload-to-release@d648f1babf776de9cad881320bd9e9818fc3b262 # Reviewed master revision
         with:
           args: ${{ github.event.repository.name }}-${{ github.ref_name }}.zip application/zip
         env:

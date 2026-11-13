@@ -17,6 +17,7 @@ Requires CP:  2.7
 	--color-surface: #f3f4f6;
 	--color-text: #202833;
 	--color-muted: #4b5563;
+	--color-header-muted: var(--color-muted);
 	--color-primary: #14569a;
 	--color-secondary: #4b5563;
 	--color-link: #14569a;
@@ -108,7 +109,7 @@ label { display: inline-block; }
 .custom-logo { display: block; width: auto; max-width: 100%; max-height: var(--logo-max-height); object-fit: contain; }
 .site-title { margin: 0; font-size: calc(var(--font-size-base) * 1.5); font-weight: 700; }
 .site-title a { color: inherit; text-decoration: none; }
-.site-description { margin: .25rem 0 0; color: var(--color-muted); }
+.site-description { margin: .25rem 0 0; color: var(--color-header-muted); }
 .primary-menu, .primary-menu ul { list-style: none; margin: 0; padding: 0; }
 .primary-menu { display: flex; flex-wrap: wrap; gap: .125rem .25rem; font-size: .9375em; }
 .primary-menu > li { min-width: 0; max-width: 100%; }

@@ -82,6 +82,36 @@ try {
 	$check( false === githeme_identity_default( 'githeme_show_tagline' ), 'Empty/new tagline default hidden' );
 	$report = githeme_contrast_report( array( 'text' => '#111111', 'link' => '#111111', 'primary' => '#111111', 'background' => '#ffffff', 'header_background' => '#111111', 'footer_background' => '#ffffff' ) );
 	$check( 'fail' === $report['header_text']['status'] && 'fail' === $report['header_link']['status'] && 'pass' === $report['footer_text']['status'] && 'pass' === $report['footer_link']['status'], 'Independent surface contrast' );
+	$minimum = githeme_contrast_rules()['normalTextMinimum'];
+	foreach ( array(
+		array( '#202833', '#ffffff', '#ffffff' ),
+		array( '#202833', '#999999', '#ffffff' ), // Audit regression: old motto was only 3.24:1.
+		array( '#202833', '#E3F2F6', '#ffffff' ),
+		array( '#ffffff', '#202833', '#ffffff' ),
+		array( '#767676', '#ffffff', '#ffffff' ), // Text barely passes; muted text does not.
+		array( '#000000', '#757575', '#ffffff' ),
+		array( '#999999', '#999999', '#ffffff' ), // An insufficient user choice must still fail.
+		array( '#202833', '#ffffff', '#000000' ), // Header derivation is independent of the body.
+	) as list( $text, $header, $background ) ) {
+		$overrides = array( 'githeme_color_text' => $text, 'githeme_color_link' => $text, 'githeme_color_primary' => '#14569a', 'githeme_color_header_background' => $header, 'githeme_color_background' => $background, 'githeme_color_footer_background' => '#ffffff' );
+		$css = githeme_custom_properties_css();
+		$check( 1 === preg_match( '/--color-header-muted:(#[a-f0-9]{6});/i', $css, $match ), 'Header motto CSS variable emitted' );
+		$motto = $match[1];
+		$candidate = githeme_mix_colors( $text, $header, 0.85 );
+		$expected = githeme_contrast_ratio( $candidate, $header ) >= $minimum ? $candidate : $text;
+		$check( $expected === $motto, 'Preserve muted header appearance only where contrast permits' );
+		$report = githeme_contrast_report( githeme_palette() );
+		$motto_passes = githeme_contrast_ratio( $motto, $header ) >= $minimum;
+		$check( ( 'pass' === $report['header_text']['status'] ) === $motto_passes, 'Header checker pass agrees with actual motto contrast' );
+		$body_muted = githeme_mix_colors( $text, $background, 0.85 );
+		if ( githeme_contrast_ratio( $body_muted, $background ) < $minimum ) { $body_muted = $text; }
+		$check( str_contains( $css, '--color-muted:' . $body_muted . ';' ), 'Existing body muted color unchanged' );
+		if ( '#999999' === $header && '#202833' === $text ) {
+			$check( '#202833' === $motto && $motto_passes, 'Reported medium-gray header keeps motto above 4.5:1' );
+			$check( ! in_array( 'fail', array_column( $report, 'status' ), true ), 'All seven checks can pass without hiding the reported motto failure' );
+		}
+	}
+	$check( (bool) preg_match( '/\.site-description\s*\{[^}]*color:\s*var\(--color-header-muted\)/', file_get_contents( get_template_directory() . '/style.css' ) ), 'Motto consumes the header-specific color' );
 } finally {
 	remove_filter( 'pre_option_theme_mods_githeme', $mods_filter );
 	remove_filter( 'pre_option_blogdescription', $description_filter );
