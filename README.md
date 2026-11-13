@@ -98,14 +98,6 @@ Add **GiTheme – Gallery Slider** through **Appearance → Widgets**, then ente
 
 The widget renders the same native `[gallery layout="slider"]` shortcode described above: large images by default, shared responsive layout, keyboard enhancement, previous/next controls, reduced-motion support, and native scrolling without JavaScript. Missing, deleted, duplicate, and non-image IDs are skipped. Empty selections produce no widget output; a single valid image stays a static native gallery. Slider JavaScript is enqueued only when the existing renderer enhances a gallery, once per page even with multiple widgets. Native Gallery widgets and ordinary gallery shortcodes remain unchanged.
 
-## Changes in 0.5.0
-
-- Native gallery sliders with accessible navigation, plus Featured Posts and Gallery Slider widgets.
-- Responsive category archive cards with native pagination.
-- Per-page title visibility and optional wide FX Builder rows.
-- Refined responsive typography, content spacing, and link styles; a widget-only footer with short-page layout support.
-- An official theme screenshot.
-
 ## Compatibility and accessibility
 
 Minimum requirements: **ClassicPress 2.7** and **PHP 8.2**. Gallery slider enhancement additionally needs PHP’s DOM extension; without it, galleries retain native rendering.
@@ -116,8 +108,11 @@ Accessibility is a continuing design and testing goal, not a claim of WCAG certi
 
 ## Available languages
 
-- English
-- Italian
+- English (original)
+- British English (`en_GB`)
+- Italian (`it_IT`)
+- German (`de_DE`)
+- Dutch (`nl_NL`)
 
 ## License
 
