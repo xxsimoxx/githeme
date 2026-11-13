@@ -2,7 +2,7 @@
 # Distributed under the GNU General Public License v3 or later.
 msgid ""
 msgstr ""
-"Project-Id-Version: GiTheme 0.5.0\n"
+"Project-Id-Version: GiTheme 1.0.0\n"
 "Report-Msgid-Bugs-To: https://github.com/xxsimoxx/githeme/issues\n"
 "PO-Revision-Date: 2026-11-13 10:07+0100\n"
 "Last-Translator: GiTheme contributors\n"
