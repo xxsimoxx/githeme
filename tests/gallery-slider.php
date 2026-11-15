@@ -121,6 +121,11 @@ try {
 	$check( githeme_gallery_item_count( $unknown_dimensions, $metadata ) === 5 && null === $metadata, 'Uncertain dimensions keep native recognition and safe presentation fallback' );
 	$check( ! str_contains( githeme_gallery_slider( $unknown_dimensions, 'gallery', array( 'layout' => 'slider' ) ), 'data-githeme-gallery-uniform' ), 'Unknown dimensions do not invent source sizes' );
 	$fixtures['syntheticSlider'] = $synthetic;
+	$uncaptioned = preg_replace( '/<figcaption\b[^>]*>.*?<\/figcaption>/s', '', $replacement );
+	$uncaptioned = preg_replace( '/ aria-describedby="[^"]*"/', '', $uncaptioned );
+	$without_captions = githeme_gallery_slider( $uncaptioned, 'gallery', array( 'layout' => 'slider' ) );
+	$check( str_contains( $without_captions, $uncaptioned ) && ! str_contains( $without_captions, 'gallery-caption' ), 'No caption containers invented for images without captions' );
+	$check( substr_count( $synthetic, '<figcaption ' ) === 5 && str_contains( $synthetic, 'aria-describedby="fixture-caption-4"' ), 'Native captions and their image description associations preserved' );
 	$fixtures['syntheticSecond'] = githeme_gallery_slider( str_replace( array( 'gallery-fixture', 'fixture-caption-' ), array( 'gallery-fixture-second', 'fixture-caption-second-' ), $replacement ), 'gallery', array( 'layout' => 'slider' ) );
 	$check( 1 === count( array_keys( wp_scripts()->queue, 'githeme-gallery-slider', true ) ), 'Multiple rendered galleries enqueue exactly one script' );
 	$fixtures['syntheticClassic'] = $replacement;

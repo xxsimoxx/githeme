@@ -256,9 +256,15 @@ body.single-post .site-main, body.page .site-main { padding-block-start: var(--s
 /* Opt-in only: native gallery HTML and traditional gallery rules stay intact. */
 .githeme-gallery-slider {
 	--githeme-gallery-gap: 1rem;
+	--githeme-gallery-caption-inset: min(.625rem, 5%);
+	--githeme-gallery-caption-color: #fff;
+	--githeme-gallery-caption-background: rgb(0 0 0 / .9);
 	container-type: inline-size;
 	position: relative;
 	min-width: 0;
+}
+@supports (color: color-mix(in srgb, #000, #fff)) {
+	.githeme-gallery-slider { --githeme-gallery-caption-background: color-mix(in srgb, color-mix(in srgb, var(--color-text) 20%, #000) 90%, transparent); }
 }
 .githeme-gallery-slider__viewport {
 	max-width: 100%;
@@ -277,6 +283,7 @@ body.single-post .site-main, body.page .site-main { padding-block-start: var(--s
 	margin: 0;
 }
 .githeme-gallery-slider__viewport > .gallery > .gallery-item {
+	position: relative;
 	flex: 0 0 auto;
 	width: max-content;
 	max-width: 100%;
@@ -286,11 +293,33 @@ body.single-post .site-main, body.page .site-main { padding-block-start: var(--s
 	overflow-wrap: anywhere;
 }
 .githeme-gallery-slider__viewport .gallery-caption {
-	contain: inline-size;
-	margin-block-start: .65rem;
-	color: var(--color-text);
-	font-size: .975em;
-	line-height: 1.6;
+	position: absolute;
+	inset-inline: var(--githeme-gallery-caption-inset);
+	inset-block-end: var(--githeme-gallery-caption-inset);
+	width: fit-content;
+	max-inline-size: calc(100% - 2 * var(--githeme-gallery-caption-inset));
+	/* Reserve the controls' centre band, with room for at least one text line. */
+	max-block-size: min(max(2.25em, calc(50% - 1.75rem - var(--githeme-gallery-caption-inset))), calc(100% - 2 * var(--githeme-gallery-caption-inset)));
+	margin: 0 auto;
+	padding: .4em .65em;
+	border-radius: .375rem;
+	background: var(--githeme-gallery-caption-background);
+	color: var(--githeme-gallery-caption-color);
+	font-size: .875em;
+	font-size: clamp(.8em, .75em + .25cqw, .9em);
+	line-height: 1.45;
+	text-align: center;
+	overflow: auto;
+}
+/* Long captions stay readable without changing image dimensions or hiding text. */
+.githeme-gallery-slider__viewport .gallery-caption:empty { display: none; }
+.githeme-gallery-slider__viewport .gallery-caption > :first-child { margin-block-start: 0; }
+.githeme-gallery-slider__viewport .gallery-caption > :last-child { margin-block-end: 0; }
+.githeme-gallery-slider__viewport .gallery-caption a { color: inherit; }
+.githeme-gallery-slider__viewport .gallery-caption:focus-visible,
+.githeme-gallery-slider__viewport .gallery-caption :focus-visible {
+	outline: 2px solid var(--githeme-gallery-caption-color);
+	outline-offset: -2px;
 }
 .githeme-gallery-slider__viewport .gallery-icon a { display: block; }
 .githeme-gallery-slider__viewport .gallery-icon a:focus-visible { outline-offset: -3px; }

@@ -78,7 +78,7 @@ def metrics(selector='#slider .githeme-gallery-slider__viewport'):
                     natural:i.naturalWidth/i.naturalHeight,ratio:i.getBoundingClientRect().width/i.getBoundingClientRect().height,
                     naturalWidth:i.naturalWidth,naturalHeight:i.naturalHeight,sourceWidth:Number(i.getAttribute('width')),sourceHeight:Number(i.getAttribute('height')),imageWidth:i.getBoundingClientRect().width,imageHeight:i.getBoundingClientRect().height,
                     imageLeft:i.getBoundingClientRect().left,imageRight:i.getBoundingClientRect().right,
-                    caption:c?.textContent,captionOverflow:c?c.scrollHeight>c.clientHeight+1:false};})};
+                    caption:c?.textContent,captionOverflow:c?c.scrollHeight>c.clientHeight+1&&getComputedStyle(c).overflowY!=='auto':false};})};
     ''', selector)
 
 
@@ -96,7 +96,17 @@ def check_geometry(state, label):
     require(state['pageScroll'] == state['width'] and all(i['width'] <= state['client'] - 2 * state['padding'] + 1 for i in state['items']), 'Images and captions bounded by component ' + label)
 
 
+def skip_caption_focus(backward=False):
+    """Overflow captions are native keyboard scrollports, not a focus trap."""
+    while 'gallery-caption' in (driver.switch_to.active_element.get_attribute('class') or '').split():
+        caption = driver.switch_to.active_element
+        require(driver.execute_script('return getComputedStyle(arguments[0]).overflowY==="auto"&&getComputedStyle(arguments[0]).outlineStyle!=="none"', caption),
+                'Caption keyboard scrollport has visible focus')
+        caption.send_keys(Keys.SHIFT + Keys.TAB if backward else Keys.TAB)
+
+
 def inspect_link(port, label):
+    skip_caption_focus('ShiftTab' in label)
     def snapshot():
         return driver.execute_script("""
         const v=arguments[0],e=document.activeElement,i=e.querySelector('img'),p=v.getBoundingClientRect(),r=e.getBoundingClientRect(),s=getComputedStyle(e);
@@ -128,7 +138,10 @@ def check_manual(port,label):
         if(!v.originalScrollBy){v.originalScrollBy=v.scrollBy;v.scrollBy=function(...a){galleryCalls++;return this.originalScrollBy(...a)}}""",port)
     port.send_keys(Keys.NULL);driver.switch_to.active_element.send_keys(Keys.TAB);time.sleep(.12)
     require(driver.execute_script('return galleryCalls===0'), 'Already visible image needs no corrective scroll '+label)
-    for _ in range(2):driver.switch_to.active_element.send_keys(Keys.TAB);time.sleep(.12)
+    for _ in range(2):
+        driver.switch_to.active_element.send_keys(Keys.TAB)
+        skip_caption_focus()
+        time.sleep(.12)
     before=driver.execute_script('return {left:arguments[0].scrollLeft,count:galleryCalls,active:document.activeElement}',port)
     second=driver.find_element(By.CSS_SELECTOR,'#second .githeme-gallery-slider__viewport')
     other=driver.execute_script('return arguments[0].scrollLeft',second)
@@ -276,6 +289,7 @@ try:
                 inspect_link(viewport, label + '/Tab')
                 driver.switch_to.active_element.send_keys(Keys.TAB)
             second_port = driver.find_element(By.CSS_SELECTOR, '#second .githeme-gallery-slider__viewport')
+            skip_caption_focus()
             if args.javascript:
                 for _ in range(3):
                     if driver.switch_to.active_element == second_port: break
