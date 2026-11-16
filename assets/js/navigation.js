@@ -1,4 +1,4 @@
-/** Progressive enhancement: the entire menu remains visible without JavaScript. */
+/** Progressive enhancement: CSS keeps navigation usable without JavaScript. */
 (() => {
 	'use strict';
 

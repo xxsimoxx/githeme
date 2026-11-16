@@ -108,7 +108,14 @@ try:
    driver.execute_script("window.navChanges=0;new MutationObserver(r=>navChanges+=r.length).observe(document.querySelector('.primary-navigation'),{attributes:true,subtree:true,attributeFilter:['class','hidden','aria-expanded']});")
    state=driver.execute_async_script("""const done=arguments[0],out=[];function sample(){out.push({changes:navChanges,compact:document.querySelector('.primary-navigation').classList.contains('is-compact')});if(out.length<30)requestAnimationFrame(sample);else done(out);}requestAnimationFrame(sample);""");require(state[-1]['changes']==state[10]['changes'],f'No observer oscillations {width}')
   for width in [1440,390,320]:
-   fixture('actual',width,nojs=True);require(not driver.find_element(By.CSS_SELECTOR,'.menu-toggle').is_displayed(),f'No-JS no dead button {width}');links=driver.find_elements(By.CSS_SELECTOR,'#primary-menu a');require(all(a.is_displayed()for a in links),f'No-JS every link visible {width}');require(dimensions()['scroll']==width,f'No-JS no overflow {width}')
+   fixture('actual',width,nojs=True);require(not driver.find_element(By.CSS_SELECTOR,'.menu-toggle').is_displayed(),f'No-JS no dead button {width}')
+   for item in driver.find_elements(By.CSS_SELECTOR,'#primary-menu > li'):
+    link=item.find_element(By.CSS_SELECTOR,':scope > a');link.send_keys(Keys.NULL)
+    require(link.is_displayed(),f'No-JS root link visible {width}')
+    for child in item.find_elements(By.CSS_SELECTOR,'ul a'):
+     require(child.is_displayed(),f'No-JS submenu opens on parent focus {width}');child.send_keys(Keys.NULL)
+     require(driver.execute_script('return document.activeElement===arguments[0]&&getComputedStyle(arguments[0]).outlineStyle!=="none"',child),f'No-JS nested link reachable with visible focus {width}')
+   require(dimensions()['scroll']==width,f'No-JS no overflow {width}')
   require(not errors,'No JavaScript errors')
   unexpected=[e for e in events if e['error']or((e['status']or 0)>=400 and not(e['origin']=='https://githeme:8890'and e['path']=='/favicon.ico'and e['status']==404))];require(not unexpected,'No new network failures (known favicon 404 retained in report)')
 except Exception as e:

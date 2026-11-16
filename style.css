@@ -145,15 +145,15 @@ label { display: inline-block; }
 	border-bottom: 1.5px solid currentColor;
 	transform: rotate(45deg);
 }
-/* Without JavaScript, nested links remain visible in the normal document flow. */
+/* Deeper lists stay grouped inside their top-level dropdown or compact menu. */
 .primary-menu ul { padding-inline-start: .75rem; border-inline-start: 1px solid var(--color-border); }
 .primary-menu ul li + li { margin-block-start: 0; }
 .primary-menu ul a { display: flex; padding: .4rem .55rem; font-weight: 400; line-height: 1.45; }
 .primary-navigation { min-width: 0; max-width: 100%; }
-/* Enhanced desktop: only root links take up space in the horizontal row. */
-.primary-navigation.is-enhanced:not(.is-compact) .primary-menu > li { position: relative; }
+/* Base presentation must not wait for the navigation script to download. */
+.primary-navigation:not(.is-compact) .primary-menu > li { position: relative; }
 .primary-navigation.is-enhanced:not(.is-compact) .primary-menu > li > a { white-space: nowrap; }
-.primary-navigation.is-enhanced:not(.is-compact) .primary-menu > li > ul {
+.primary-navigation:not(.is-compact) .primary-menu > li > ul {
 	display: none;
 	position: absolute;
 	inset-block-start: 100%;
@@ -170,8 +170,13 @@ label { display: inline-block; }
 	transform: translateX(var(--submenu-offset, 0px));
 	text-align: start;
 }
-.primary-navigation.is-enhanced:not(.is-compact) .primary-menu > li:not(.submenu-dismissed):hover > ul,
-.primary-navigation.is-enhanced:not(.is-compact) .primary-menu > li:not(.submenu-dismissed):focus-within > ul { display: block; }
+.primary-navigation:not(.is-compact) .primary-menu > li:not(.submenu-dismissed):hover > ul,
+.primary-navigation:not(.is-compact) .primary-menu > li:not(.submenu-dismissed):focus-within > ul { display: block; }
+@media (max-width: 48rem) {
+	/* Usable vertical fallback before enhancement, including with JavaScript off. */
+	.primary-navigation { width: 100%; }
+	.primary-menu { flex-direction: column; text-align: start; }
+}
 
 /* The same mobile layout also applies when the actual desktop menu cannot fit. */
 .primary-navigation.is-compact { width: 100%; }
