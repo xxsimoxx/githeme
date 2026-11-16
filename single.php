@@ -14,7 +14,9 @@ while ( have_posts() ) :
 		<?php
 		// Reuse the core archive pagination translations and their contexts.
 		the_post_navigation( array(
+			// phpcs:ignore WordPress.WP.I18n.MissingArgDomain -- Intentionally use the core default text domain for its existing pagination translation.
 			'prev_text' => esc_html_x( 'Previous', 'previous set of posts' ),
+			// phpcs:ignore WordPress.WP.I18n.MissingArgDomain -- Intentionally use the core default text domain for its existing pagination translation.
 			'next_text' => esc_html_x( 'Next', 'next set of posts' ),
 		) );
 		?>
