@@ -195,6 +195,13 @@ function githeme_button_text_color( $background ) {
 	return githeme_contrast_ratio( $background, '#000000' ) >= githeme_contrast_ratio( $background, '#ffffff' ) ? '#000000' : '#ffffff';
 }
 
+/** Preserve the preferred navigation outline when it meets non-text contrast. */
+function githeme_navigation_focus_color( $preferred, $background ) {
+	return githeme_contrast_ratio( $preferred, $background ) >= 3
+		? $preferred
+		: githeme_button_text_color( $background );
+}
+
 /**
  * Normal-size text only: does not assess component borders, icons or logos.
  *
@@ -331,6 +338,8 @@ function githeme_custom_properties_css() {
 		'color-text'       => $colors['text'],
 		'color-background' => $colors['background'],
 		'color-link'       => $colors['link'],
+		'color-navigation-focus' => githeme_navigation_focus_color( $colors['primary'], $colors['header_background'] ),
+		'color-navigation-submenu-focus' => githeme_navigation_focus_color( $colors['primary'], $colors['background'] ),
 		'color-header-background' => $colors['header_background'],
 		'color-footer-background' => $colors['footer_background'],
 		'color-button-text' => githeme_button_text_color( $colors['primary'] ),

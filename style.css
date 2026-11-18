@@ -19,6 +19,8 @@ Requires CP:  2.7
 	--color-muted: #4b5563;
 	--color-header-muted: var(--color-muted);
 	--color-primary: #14569a;
+	--color-navigation-focus: var(--color-primary);
+	--color-navigation-submenu-focus: var(--color-primary);
 	--color-secondary: #4b5563;
 	--color-link: #14569a;
 	--color-button-text: #fff;
@@ -126,7 +128,8 @@ label { display: inline-block; }
 	text-decoration: none;
 }
 .primary-menu a:hover, .primary-menu a:focus-visible { background: var(--color-surface); }
-.primary-menu a:focus-visible { outline-color: var(--color-primary); outline-offset: 2px; }
+.primary-menu a:focus-visible { outline-color: var(--color-navigation-focus); outline-offset: 2px; }
+.primary-navigation:not(.is-compact) .primary-menu ul a:focus-visible { outline-color: var(--color-navigation-submenu-focus); }
 .primary-menu .current-menu-ancestor > a { font-weight: 600; }
 .primary-menu .current-menu-item > a, .primary-menu a[aria-current="page"] {
 	border-inline-start-color: var(--color-primary);
