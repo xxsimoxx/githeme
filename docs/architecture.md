@@ -1,80 +1,80 @@
-# Architettura
+# Architecture
 
-Tema classico PHP per ClassicPress, senza framework, build obbligatoria, Gutenberg o dipendenze obbligatorie da plugin. I contenuti appartengono alle pagine e agli articoli; le opzioni globali di presentazione al Customizer. Non sono presenti page builder interni, ordinamenti proprietari delle sezioni o varianti specifiche per singoli siti.
+A classic PHP theme for ClassicPress, without a framework, mandatory build step, Gutenberg, or required plugin dependencies. Content belongs in pages and posts; global presentation options belong in the Customizer. There is no built-in page builder, proprietary section ordering, or site-specific variant.
 
-## Organizzazione e rendering
+## Organization and rendering
 
-| Percorso | Responsabilità |
+| Path | Responsibility |
 |---|---|
-| `functions.php` | Carica impostazioni, setup, Customizer, gallerie, categorie, controllo del titolo e widget. |
-| `inc/setup.php` | Supporti del tema, menu, asset e registrazione delle aree widget. |
-| `inc/settings.php` | Valori validati, contrasto, font, proprietà CSS ed editor classico. |
-| `inc/customizer.php` | Registrazione, validazione, avvisi e asset informativi. |
-| `inc/class-githeme-*-control.php` | Controlli Customizer con markup proprio e binding pubblico. |
-| `inc/gallery.php`, `assets/js/gallery-slider.js` | Wrapper opzionale della galleria nativa e navigazione progressiva. |
-| `inc/category.php`, `category.php` | Query principale delle categorie e griglia dedicata. |
-| `template-parts/content-category-card.php` | Card condivise fra archivi e Featured Posts. |
-| `inc/page-title.php` | Meta box e preferenza del titolo delle sole pagine. |
-| `inc/class-githeme-*-widget.php` | Widget nativi Featured Posts e Gallery Slider. |
-| `header.php`, `footer.php` | Header/footer condivisi e inserimento condizionale delle aree homepage. |
-| `page.php`, `single.php` | Rendering dei contenuti singoli tramite `template-parts/content-singular.php`. |
-| `index.php`, `404.php`, `comments.php` | Elenchi, archivi/ricerca, pagina mancante e commenti. |
-| `template-parts/homepage-widgets.php` | Rendering riutilizzato delle aree homepage attive, senza contenitori vuoti. |
-| `style.css`, `assets/` | CSS, script vanilla e font locali. |
-| `tests/` | Verifiche del checkout di sviluppo. |
+| `functions.php` | Loads settings, setup, Customizer, galleries, categories, page-title handling, and widgets. |
+| `inc/setup.php` | Theme supports, menus, assets, and widget-area registration. |
+| `inc/settings.php` | Validated values, contrast, fonts, CSS properties, and Classic Editor integration. |
+| `inc/customizer.php` | Registration, validation, warnings, and informational assets. |
+| `inc/class-githeme-*-control.php` | Customizer controls with their own markup and public binding. |
+| `inc/gallery.php`, `assets/js/gallery-slider.js` | Optional native gallery wrapper and progressive navigation. |
+| `inc/category.php`, `category.php` | Main category query and dedicated grid. |
+| `template-parts/content-category-card.php` | Cards shared by archives and Featured Posts. |
+| `inc/page-title.php` | Page-only meta box and title preference. |
+| `inc/class-githeme-*-widget.php` | Native Featured Posts and Gallery Slider widgets. |
+| `header.php`, `footer.php` | Shared header/footer and conditional homepage widget areas. |
+| `page.php`, `single.php` | Singular content through `template-parts/content-singular.php`. |
+| `index.php`, `404.php`, `comments.php` | Listings, archives/search, missing page, and comments. |
+| `template-parts/homepage-widgets.php` | Reusable rendering of active homepage areas without empty containers. |
+| `style.css`, `assets/` | CSS, vanilla JavaScript, and local fonts. |
+| `tests/` | Development-checkout tests. |
 
-Non esistono `front-page.php` o `home.php`: resta valida la gerarchia nativa. La homepage statica mostra il normale contenuto della pagina e, facoltativamente, le aree descritte in [Configurazione](configuration.md). Una pagina creata con un plugin facoltativo resta possibile senza rendere quel plugin necessario al tema.
+There is no `front-page.php` or `home.php`: native template hierarchy applies. A static homepage displays normal page content and, optionally, the areas described in [Configuration](configuration.md). Pages built with an optional plugin remain possible without making that plugin a theme dependency.
 
-## CSS e variabili
+## CSS and variables
 
-`githeme_custom_properties_css()` genera proprietà da valori validati, senza utilizzare stringhe CSS arbitrarie provenienti dai controlli. `githeme_rendered_widths()` applica limiti difensivi senza riscrivere valori salvati. CSS Grid, Flexbox e dimensioni relative mantengono il layout responsive.
+`githeme_custom_properties_css()` generates properties from validated values, without accepting arbitrary CSS strings from controls. `githeme_rendered_widths()` applies defensive bounds without rewriting stored values. CSS Grid, Flexbox, and relative units keep the layout responsive.
 
-| Variabili | Origine |
+| Variables | Source |
 |---|---|
-| `--color-primary`, `--color-secondary`, `--color-text`, `--color-background`, `--color-link` | Palette del Customizer. |
-| `--color-header-background`, `--color-footer-background` | Sfondi indipendenti del Customizer. |
-| `--color-button-text`, `--color-button-hover-text` | Bianco/nero a contrasto migliore su primario e secondario. |
-| `--color-surface`, `--color-muted`, `--color-border` | Varianti calcolate dalla palette, senza seconda palette autonoma. |
-| `--font-body`, `--font-size-base`, `--heading-scale`, `--heading-1` … `--heading-6` | Font e scala selezionati. |
-| `--width-content`, `--width-wide`, `--width-layout` | Larghezze validate e limitate per il rendering. |
-| `--logo-max-height` | Altezza massima configurata del logo. |
+| `--color-primary`, `--color-secondary`, `--color-text`, `--color-background`, `--color-link` | Customizer palette. |
+| `--color-header-background`, `--color-footer-background` | Independent Customizer backgrounds. |
+| `--color-button-text`, `--color-button-hover-text` | Better-contrast black/white on primary and secondary. |
+| `--color-surface`, `--color-muted`, `--color-border` | Derived palette variants, without a separate palette. |
+| `--font-body`, `--font-size-base`, `--heading-scale`, `--heading-1` … `--heading-6` | Selected font and heading scale. |
+| `--width-content`, `--width-wide`, `--width-layout` | Validated and rendering-bounded widths. |
+| `--logo-max-height` | Configured maximum logo height. |
 
-La superficie derivata usa secondario e sfondo (6%/94%). Il footer utilizza invece il proprio colore indipendente. Il testo attenuato usa una miscela testo/sfondo e torna al testo originale se la miscela non raggiunge la soglia normale; ciò non corregge una palette originale insufficiente.
+The derived surface blends secondary and background (6%/94%). The footer uses its independent color instead. Muted text blends text/background and falls back to the original text color if the blend fails the normal-text threshold; this cannot fix an insufficient original palette.
 
-## Asset ed editor
+## Assets and editor
 
-`githeme_enqueue_assets()` usa le API native. CSS frontend, navigazione, foglio dell'editor classico e integrazione FX usano la versione di `style.css` per la cache; gli asset informativi del Customizer usano `filemtime()`. Anche lo script dello slider usa la versione del tema ed è accodato solo dal rendering di una galleria effettivamente migliorata, senza duplicazioni fra shortcode e widget.
+`githeme_enqueue_assets()` uses native APIs. Frontend CSS, navigation, Classic Editor stylesheet, and FX integration use the `style.css` version for caching; Customizer informational assets use `filemtime()`. The slider script also uses the theme version and is enqueued only when an enhanced gallery is actually rendered, without duplication between shortcode and widget.
 
-`githeme_editor_settings()` aggiunge font e proprietà a `content_style` tramite `tiny_mce_before_init` e `teeny_mce_before_init`, conservando l'eventuale stile precedente. Le virgolette doppie del solo CSS generato vengono sostituite con singole prima dell'aggiunta, per evitare l'errore di inizializzazione TinyMCE con famiglie come “Segoe UI”. Il foglio `assets/css/editor.css` non carica il layout del frontend nell'editor.
+`githeme_editor_settings()` appends fonts and properties to `content_style` through `tiny_mce_before_init` and `teeny_mce_before_init`, preserving existing styles. Double quotes in the generated CSS alone are replaced with single quotes before appending, preventing TinyMCE initialization errors with families such as “Segoe UI”. `assets/css/editor.css` does not load the frontend layout into the editor.
 
-## Navigazione e progressive enhancement
+## Navigation and progressive enhancement
 
-Il menu conserva un unico elenco nel DOM, il pulsante nativo con `aria-expanded` e `aria-controls`, e i sottomenu disponibili con mouse e tastiera. Su desktop i pannelli sono fuori dal flusso: soltanto le voci principali determinano lo spazio necessario, non la larghezza dei sottomenu aperti. Escape chiude anche un pannello desktop e riporta il focus al collegamento genitore quando proviene dal pannello. I livelli ulteriori restano annidati nel pannello, senza flyout fuori schermo. L’indicatore passa da hamburger a chiusura senza modificare il nome accessibile “Menu”. Escape chiude la navigazione compatta e riporta il focus al pulsante. Il layout centrato con menu sotto considera disponibile l’intera riga; quello in linea considera anche lo spazio dell’identità del sito. Senza JavaScript il menu può andare a capo e tutti i collegamenti restano utilizzabili.
+Navigation keeps a single list in the DOM, a native button with `aria-expanded` and `aria-controls`, and mouse- and keyboard-accessible submenus. On desktop, panels are out of flow: only top-level items determine required space, not the width of open submenus. Escape closes desktop panels and restores focus to the parent link when focus came from within a panel. Further levels stay nested inside the panel rather than opening offscreen flyouts. The indicator switches from hamburger to close without changing the accessible name “Menu”. Escape closes compact navigation and restores focus to its button. Centered identity with navigation below can use the full row; inline layout also accounts for site-identity width. Without JavaScript, the menu can wrap and every link remains usable.
 
-I ricalcoli sono raggruppati tramite `requestAnimationFrame`: `ResizeObserver` osserva header, identità e menu, mentre le variazioni delle classi di layout e delle variabili inline vengono rilevate separatamente. Il completamento del caricamento dei font locali richiede un nuovo controllo anche dopo il rendering iniziale. Non vengono osservati gli attributi che lo script stesso modifica nel menu.
+Recalculations are batched with `requestAnimationFrame`: `ResizeObserver` watches header, identity, and menu, while changes to layout classes and inline variables are detected separately. Completion of local font loading triggers another check even after initial rendering. The script does not observe menu attributes it changes itself.
 
-## Controlli e confini del Customizer
+## Social menu
 
-API pubbliche PHP, controlli standard ove possibile, una impostazione per controllo, sanitizzazione e validazione. L'anteprima usa `refresh`; non viene implementato selective refresh. L'interfaccia informativa del tema ascolta eventi DOM standard sui propri input; non dipende da Backbone, dal proxy JavaScript incompleto o dal DOM interno del core. Vedere [Accessibilità](accessibility.md) e [Sviluppo](development.md).
+The optional `social` location uses ClassicPress's native menu system and renders in a dedicated footer row. Recognized links display local SVG icons and retain accessible names; unrecognized links retain visible labels. Matching can be extended through `githeme_social_links_icons`. See [Social menu](social-menu.md) for configuration, rules, and child-theme SVGs.
 
-Le checkbox usano WP_Customize_Control, il contenitore nativo
-`customize-inside-control-row`, etichette for/id e descrizioni aria-describedby; il
-valore HTML resta 1 anche da disattivate. Nessun override CSS o API JavaScript interna.
-Il test mirato `tests/header-surfaces.php` usa solo override in memoria per le otto
-combinazioni logo/titolo/motto e la validazione delle nuove impostazioni.
+## Customizer controls and boundaries
 
-## Plugin facoltativi
+Public PHP APIs, standard controls where possible, one setting per control, sanitization, and validation. Global theme settings use `refresh`. Menus instead use ClassicPress's native Selective Refresh, without registering custom partials. After markup replacement, the navigation script reacquires the menu and resynchronizes the button, submenus, and observers. The theme's informational interface listens to standard DOM events on its own inputs; it does not depend on Backbone, the incomplete JavaScript proxy, or the core's internal DOM. See [Accessibility](accessibility.md) and [Development](development.md).
 
-Il tema usa `the_content()` e le normali API widget; funziona senza FX Builder, FX Shortcodes e FX Builder Widgets. Non richiama direttamente le loro API. I contenuti creati con un plugin possono comunque dipendere dal plugin per il rendering.
+Checkboxes use `WP_Customize_Control`, the native `customize-inside-control-row` container, `for`/`id` labels, and `aria-describedby` descriptions; the HTML value remains `1` even when unchecked. There is no CSS override or internal JavaScript API. The focused `tests/header-surfaces.php` test uses only in-memory overrides for the eight logo/title/tagline combinations and validation of new settings.
 
-La sola integrazione grafica dedicata riguarda i cinque componenti descritti in [FX Shortcodes](fx-shortcodes.md). Group, FX Builder e FX Builder Widgets non hanno integrazioni grafiche dedicate nel tema.
+## Optional plugins
 
-## Licenze
+The theme uses `the_content()` and standard widget APIs; it works without FX Builder, FX Shortcodes, and FX Builder Widgets. It does not directly call their APIs. Content created with a plugin may still require that plugin to render.
 
-Il codice è GPL-3.0-or-later, come indicato in [LICENSE](../LICENSE). I font mantengono SIL OFL 1.1, con licenze nelle rispettive directory e [provenienza documentata](../assets/fonts/SOURCES.md).
+The only dedicated visual integration covers the five components in [FX Shortcodes](fx-shortcodes.md). Group, FX Builder, and FX Builder Widgets have no dedicated visual integration in the theme.
 
-## Componenti condivisi di 0.5.0
+## Licenses
 
-Featured Posts usa lo stesso template e gli stessi stili delle categorie; soltanto query, ID e livello del titolo della card dipendono dal contesto. Gallery Slider invoca una volta il normale shortcode gallery, senza una seconda implementazione. Il filtro `shortcode_atts_gallery` fornisce `large` solo agli slider privi di `size`; `do_shortcode_tag` conserva l'HTML nativo e lo avvolge soltanto se riconoscibile. In assenza di DOM o con output incompatibile resta il rendering nativo.
+Code is GPL-3.0-or-later, as stated in [LICENSE](../LICENSE). Fonts retain SIL OFL 1.1, with licenses in their directories and [documented provenance](../assets/fonts/SOURCES.md).
 
-La tipografia editoriale ha un blocco CSS condiviso fra frontend ed editor, con breakpoint a 48rem e valori derivati dalle variabili esistenti; titoli di widget e componenti mantengono le proprie regole. `githeme-wide` amplia solo i contenitori con righe Default esplicitamente abilitate e conserva la larghezza editoriale delle altre righe. Non vengono introdotte API JavaScript del Customizer o dipendenze dai plugin.
+## Shared components
+
+Featured Posts uses the same template and styles as categories; only the query, IDs, and card heading level depend on context. Gallery Slider invokes the normal gallery shortcode once, without a second implementation. The `shortcode_atts_gallery` filter supplies `large` only to sliders without a `size`; `do_shortcode_tag` preserves native HTML and wraps it only when recognizable. Without DOM or with incompatible output, native rendering remains.
+
+Editorial typography shares a CSS block between frontend and editor, with a 48rem breakpoint and values derived from existing variables; widget and component headings retain their own rules. `githeme-wide` expands only containers with explicitly enabled Default rows and preserves the editorial width of other rows. No new Customizer JavaScript APIs or plugin dependencies are introduced.

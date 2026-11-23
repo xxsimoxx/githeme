@@ -1,31 +1,31 @@
-# Integrazione opzionale con FX Shortcodes
+# Optional FX Shortcodes integration
 
-Il tema continua a funzionare senza il plugin. `githeme_enqueue_fx_shortcodes_style()` carica `assets/css/fx-shortcodes.css` soltanto quando il foglio `fx-shortcodes` è accodato; dipendenze `githeme-style` e `fx-shortcodes`, hook `wp_enqueue_scripts` a priorità 20. Nessuna nuova opzione Customizer e nessun richiamo delle API del plugin necessario al tema.
+The theme continues to work without the plugin. `githeme_enqueue_fx_shortcodes_style()` loads `assets/css/fx-shortcodes.css` only when the `fx-shortcodes` stylesheet is enqueued; dependencies are `githeme-style` and `fx-shortcodes`, on `wp_enqueue_scripts` at priority 20. No new Customizer options or calls to plugin APIs are required by the theme.
 
-## Componenti supportati
+## Supported components
 
-| Componente | Integrazione |
+| Component | Integration |
 |---|---|
-| Button | Primario e `--color-button-text`; hover/focus-visible fill e outline sul secondario, con `--color-button-hover-text` calcolato per il contrasto. Text resta trasparente, senza sottolineatura; in hover il bordo diventa visibile. Il focus mantiene il proprio indicatore. Dimensioni e varianti non vengono riscritte. |
-| Card | Sfondo `--color-footer-background`, testo ereditato, bordo `--color-border`, angoli discreti e ombra derivata da `--color-text`. Immagini e proporzioni del plugin preservate. |
-| Cover | Sfondo predefinito `--color-background`, testo ereditato e padding responsive. Struttura, immagine e overlay restano del plugin. Gli elementi annidati conservano le proprie regole. |
-| Details | Sfondo `--color-background`, bordo `--color-border`, testo ereditato, hover/focus discreto da `currentColor`; comportamento nativo di apertura/chiusura. |
-| Separator | Colore predefinito `--color-secondary`; dimensioni, allineamento e varianti del plugin restano disponibili. |
+| Button | Primary color and `--color-button-text`; hover/focus-visible fill and outline use the secondary color, with `--color-button-hover-text` calculated for contrast. Text remains transparent and without underline; its border becomes visible on hover. Focus keeps its own indicator. Sizes and variants are not rewritten. |
+| Card | `--color-footer-background` background, inherited text, `--color-border` border, subtle corners, and shadow derived from `--color-text`. Plugin images and proportions are preserved. |
+| Cover | Default `--color-background` background, inherited text, and responsive padding. The plugin retains control of structure, image, and overlay. Nested elements keep their own rules. |
+| Details | `--color-background` background, `--color-border` border, inherited text, subtle hover/focus from `currentColor`; native open/close behavior. |
+| Separator | Default `--color-secondary`; plugin sizing, alignment, and variants remain available. |
 
-Group è organizzativo e non ha un'identità grafica dedicata. Nessuna integrazione grafica dedicata con FX Builder o FX Builder Widgets.
+Group is organizational and has no dedicated visual treatment. There is no dedicated visual integration for FX Builder or FX Builder Widgets.
 
-## Precedenza delle personalizzazioni
+## Customization precedence
 
-Gli attributi del renderer vengono applicati inline: colori, padding, margini, raggio e altre proprietà supportate prevalgono sul foglio del tema. Non si usa `!important`. Button espone `--fx-button-bg` e `--fx-button-color`: se una delle due è presente nel suo attributo `style`, il tema non applica la regola di hover/focus-visible sul secondario e conserva l'hover del plugin. Non vengono sovrascritti gli sfondi espliciti di Card, Cover o Details né il colore esplicito di Separator.
+Renderer attributes are applied inline: supported colors, padding, margins, radius, and other properties take precedence over the theme stylesheet. `!important` is not used. Button exposes `--fx-button-bg` and `--fx-button-color`: if either appears in its `style` attribute, the theme does not apply its secondary-color hover/focus-visible rule and retains the plugin's hover behavior. Explicit Card, Cover, and Details backgrounds and explicit Separator colors are not overridden.
 
-Il tema riutilizza `githeme_button_text_color()` su primario e secondario, scegliendo bianco o nero con contrasto migliore. Non ricalcola il testo per sfondi inline arbitrari. Le personalizzazioni esplicite e il testo sopra le immagini Cover richiedono controllo editoriale del contrasto. Lo spessore di Separator dipende dalle varianti: il renderer esaminato non espone un attributo separato per lo spessore.
+The theme reuses `githeme_button_text_color()` for primary and secondary colors, choosing whichever of white or black gives better contrast. It does not recalculate text color for arbitrary inline backgrounds. Explicit customizations and text over Cover images require editorial contrast checks. Separator thickness depends on its variants: the inspected renderer does not expose a separate thickness attribute.
 
-## Accessibilità e verifica
+## Accessibility and verification
 
-Focus visibile, controlli Details nativi, nessuna dipendenza JavaScript aggiuntiva e rispetto del movimento ridotto. Questa integrazione non è una dichiarazione di conformità WCAG dei contenuti del plugin.
+Visible focus, native Details controls, no additional JavaScript dependency, and respect for reduced-motion preferences. This integration is not a claim of WCAG conformance for plugin content.
 
-Il test [tests/fx-shortcodes.php](../tests/fx-shortcodes.php) verifica in memoria il caricamento condizionale, l'ordine/cache dei CSS e il contrasto automatico, anche quando i plugin vengono saltati. Le prove browser devono includere componenti predefiniti e personalizzati alle viewport indicate in [Sviluppo](development.md). Non modificare il plugin per adattare la presentazione del tema.
+The [tests/fx-shortcodes.php](../tests/fx-shortcodes.php) test checks conditional loading, CSS order/cache, and automatic contrast in memory, including when plugins are skipped. Browser checks should include default and customized components at the viewport sizes listed in [Development](development.md). Do not modify the plugin to accommodate the theme's presentation.
 
-## Confine del rendering
+## Rendering boundary
 
-FX Shortcodes non registra `[element]` come shortcode ordinario: `do_shortcode()` da solo non lo elabora. Il rendering appartiene al plugin, non al foglio di integrazione del tema. Il tema continua a usare `the_content()` e le normali API widget; i contenuti creati con un plugin possono dipendere da quel plugin per essere visualizzati.
+FX Shortcodes does not register `[element]` as an ordinary shortcode: `do_shortcode()` alone does not process it. Rendering belongs to the plugin, not the theme integration stylesheet. The theme continues to use `the_content()` and standard widget APIs; content created with a plugin may depend on that plugin to display.

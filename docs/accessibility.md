@@ -1,44 +1,44 @@
-# Accessibilità
+# Accessibility
 
-Accessibilità WCAG 2.2 AA, prestazioni e SEO tecnico sono obiettivi di sviluppo, non certificazioni. I test automatici e le prove di viewport non dimostrano conformità completa.
+WCAG 2.2 AA accessibility, performance, and technical SEO are development goals, not certifications. Automated tests and viewport checks do not establish full conformance.
 
-## Struttura, navigazione e focus
+## Structure, navigation, and focus
 
-Header/footer semantici, un elemento `main` e skip link verso `#main-content`. I widget opzionali usano titoli di livello 2; i contenuti devono mantenere una gerarchia coerente. Menu con un unico elenco e pulsante nativo, `aria-expanded` e `aria-controls`; sottomenu raggiungibili con mouse e tastiera, Escape e ripristino del focus. Non sono ruoli ARIA da applicazione né un dialogo con focus trap. Senza JavaScript tutti i collegamenti restano utilizzabili. Dettagli implementativi in [Architettura](architecture.md).
+Semantic header/footer, a `main` element, and a skip link to `#main-content`. Optional widgets use level-two headings; content must maintain a consistent hierarchy. Navigation uses a single list and a native button with `aria-expanded` and `aria-controls`; submenus are accessible by mouse and keyboard, with Escape handling and focus restoration. There are no application ARIA roles or focus-trapping dialogs. All links remain usable without JavaScript. See [Architecture](architecture.md) for implementation details.
 
-Il CSS include `:focus-visible`. La verifica manuale deve considerare i contenuti e gli stili espliciti aggiunti dagli autori, oltre ai default del tema. Dimensioni relative e zoom non bloccato; viewport stretta non equivale a zoom reale.
+CSS includes `:focus-visible`. Manual testing must consider author-provided content and explicit styles as well as theme defaults. Relative sizing and unrestricted zoom are supported; a narrow viewport is not equivalent to actual browser zoom.
 
-## Contrasto e avvisi informativi
+## Contrast and informational warnings
 
-Il controllo informativo “Color contrast” in Colors mostra stato testuale, rapporto e soglia per testo/sfondo, link/sfondo, testo normale dei pulsanti/primario e testo/link sugli sfondi di header e footer. Il riferimento 4,5:1 riguarda il testo di dimensione normale: non è una verifica di loghi, icone, bordi dei componenti, stili dei plugin o conformità dell’intero sito. Stati hover/focus e identificazione dei link richiedono verifiche separate. Il confronto usa il rapporto non arrotondato; la visualizzazione mostra due decimali.
+The “Color contrast” informational control in Colors displays textual status, ratio, and threshold for text/background, links/background, normal button text/primary, and text/links against header and footer backgrounds. The 4.5:1 reference applies to normal-sized text: it does not verify logos, icons, component borders, plugin styles, or whole-site conformance. Hover/focus states and link identification need separate checks. Comparisons use the unrounded ratio; displayed values have two decimal places.
 
-Il pannello PHP rimane leggibile nel documento ricevuto dal server se lo script del tema manca. La nota statica indica di ricaricare dopo il salvataggio; quando lo script è disponibile viene sostituita dalla spiegazione degli aggiornamenti immediati. Questo fallback informativo non rende il Customizer del core interamente utilizzabile senza JavaScript.
+The PHP panel remains readable in server-delivered HTML if the theme script is unavailable. Its static note advises reloading after saving; when the script is available, this is replaced by an explanation of immediate updates. This informational fallback does not make the core Customizer fully usable without JavaScript.
 
-Gli aggiornamenti visivi seguono gli eventi nativi `input` e `change` dei campi renderizzati dal tema tramite il controllo colore e il binding pubblico `link()`. Nessun accesso al DOM interno del Customizer, a Backbone o al proxy. Una live region separata, inizialmente vuota, usa `role="status"`, `aria-live="polite"` e `aria-atomic="true"`; aggiorna soltanto i risultati cambiati dopo 750 ms di pausa, senza spostare il focus. Non vengono annunciati aggiornamenti identici. L’effettiva lettura richiede comunque verifica manuale con screen reader.
+Visual updates follow native `input` and `change` events on theme-rendered fields using the color control and public `link()` binding. There is no access to the Customizer's internal DOM, Backbone, or proxy. A separate, initially empty live region uses `role="status"`, `aria-live="polite"`, and `aria-atomic="true"`; it reports only changed results after a 750 ms pause without moving focus. Identical updates are not announced. Actual announcements still require manual screen-reader testing.
 
-Il riferimento è [WCAG 2.2, contrasto del testo](https://www.w3.org/WAI/WCAG22/Understanding/contrast-minimum.html). Le costanti sRGB e la soglia sono definite una sola volta in `githeme_contrast_rules()` e passate a JavaScript. Le implementazioni PHP/JS della stessa formula WCAG sono verificate con casi condivisi e test di parità. `githeme_contrast_report()` restituisce anche lo stato non calcolabile per input invalidi. I consigli non modificano colori scelti né bloccano il salvataggio; la validazione sintattica esistente resta separata. Il testo dei pulsanti sceglie automaticamente bianco o nero con contrasto migliore. Superfici, bordi e testi secondari restano derivati dalla palette.
+See [WCAG 2.2, Contrast (Minimum)](https://www.w3.org/WAI/WCAG22/Understanding/contrast-minimum.html). sRGB constants and the threshold are defined once in `githeme_contrast_rules()` and passed to JavaScript. PHP and JS implementations of the same WCAG formula are checked with shared cases and parity tests. `githeme_contrast_report()` also returns an uncomputable state for invalid input. Advice neither changes selected colors nor blocks saving; existing syntax validation is separate. Button text automatically chooses whichever of black or white provides better contrast. Surfaces, borders, and secondary text remain derived from the palette.
 
-`githeme_contrast_ratio()` calcola il rapporto, `githeme_button_text_color()` sceglie il foreground automatico e `githeme_contrast_warnings()` produce gli avvisi PHP. Il confronto per le sette coppie non comprende ogni possibile stato di interazione o contenuto dei plugin. L'hover FX sul secondario usa un foreground automatico separato; vedere [FX Shortcodes](fx-shortcodes.md).
+`githeme_contrast_ratio()` calculates the ratio, `githeme_button_text_color()` selects the automatic foreground, and `githeme_contrast_warnings()` produces PHP warnings. The seven checked pairs do not cover every interaction state or plugin content. FX hover on the secondary color uses a separate automatic foreground; see [FX Shortcodes](fx-shortcodes.md).
 
-## Tipografia e font locali
+## Typography and locally hosted fonts
 
-I font WOFF2 sono locali e non modificati, con licenze SIL OFL 1.1 e provenienza documentata in [provenienza e licenze dei font](../assets/fonts/SOURCES.md). Il tema dichiara solo le due varianti variabili, normale e corsiva, della famiglia selezionata: il browser scarica i file quando il contenuto li usa. Nessun preload forzato e nessun font caricato dal tema con lo stack di sistema. I plugin possono avere impostazioni font proprie, indipendenti dal tema.
+WOFF2 fonts are local and unmodified, licensed under SIL OFL 1.1, with sources documented in [font sources and licenses](../assets/fonts/SOURCES.md). The theme declares only the two variable faces, upright and italic, of the selected family; the browser downloads files as content needs them. There is no forced preload, and the theme loads no fonts when the system stack is selected. Plugins may configure their fonts independently.
 
-Atkinson Hyperlegible Next è una delle scelte disponibili; non è imposto e la sua selezione non costituisce una verifica dell'accessibilità dei contenuti. Restano disponibili stack di sistema, Source Sans 3 e Source Serif 4.
+Atkinson Hyperlegible Next is one available option; it is not imposed, and choosing it does not establish content accessibility. The system stack, Source Sans 3, and Source Serif 4 are also available.
 
-## Movimento ridotto
+## Reduced motion
 
-Non sono necessarie animazioni per usare la navigazione. Il foglio opzionale FX elimina le transizioni dei pulsanti con `prefers-reduced-motion: reduce`; l'indicatore Details non richiede una transizione. Plugin e contenuti esterni possono avere preferenze proprie da verificare.
+Navigation does not depend on animation. The optional FX stylesheet removes button transitions under `prefers-reduced-motion: reduce`; the Details indicator does not require a transition. Plugins and external content may have their own behavior to check.
 
-Lo slider nativo usa Scroll Snap e scorrimento orizzontale senza autoplay. Con JavaScript aggiunge pulsanti nominati e corregge la visibilità delle immagini focalizzate; il movimento ridotto rende immediati gli spostamenti dei pulsanti. Senza script restano link e scorrimento nativo: Firefox può lasciare un'immagine focalizzata parzialmente visibile finché l'utente non scorre. Le immagini fuori schermo non vengono nascoste alle tecnologie assistive.
+The native slider uses Scroll Snap and horizontal scrolling without autoplay. JavaScript adds labeled buttons and adjusts visibility of focused images; reduced-motion settings make button-triggered movement immediate. Without scripts, links and native scrolling remain: Firefox may leave a focused image partly visible until the user scrolls. Offscreen images are not hidden from assistive technology.
 
-## Verifiche che richiedono una persona
+## Checks requiring human review
 
-- Attivazione, pagine/articoli, elenchi, ricerca, 404 e contenuti protetti da password.
-- Homepage statica con e senza FX Builder; tema con plugin FX disattivati.
-- Menu annidati, tastiera, Escape, cambio larghezza, zoom e JavaScript disattivato.
-- Logo, titoli lunghi, immagini, tabelle e contenuti dell'editor classico.
-- Customizer: anteprima e pubblicazione del logo, menu e widget; aggiunta del primo widget, riordino, modifica e rimozione dell'ultimo.
-- Commenti, risposte annidate e paginazione.
+- Activation, pages/posts, listings, search, 404 pages, and password-protected content.
+- Static homepage with and without FX Builder; theme with FX plugins disabled.
+- Nested menus, keyboard, Escape, width changes, zoom, and JavaScript disabled.
+- Logo, long headings, images, tables, and Classic Editor content.
+- Customizer: preview and publication of logo, menus, and widgets; adding the first widget, reordering, editing, and removing the last.
+- Comments, nested replies, and pagination.
 
-Restano necessari screen reader, dispositivi touch reali, ingrandimento e lettura dei contenuti effettivi. Le mutazioni della live region non attestano ciò che viene pronunciato da VoiceOver o altri lettori. Le procedure e i limiti dei test sono in [Sviluppo](development.md).
+Screen readers, real touch devices, magnification, and review of actual content are still required. Live-region DOM mutations do not establish what VoiceOver or other readers announce. Test procedures and limitations are documented in [Development](development.md).

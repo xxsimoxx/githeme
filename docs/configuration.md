@@ -1,85 +1,76 @@
-# Configurazione
+# Configuration
 
-Materiale tecnico separato dal README; valori verificati nelle definizioni correnti di `inc/settings.php` e `inc/customizer.php`. Per i confini dell'integrazione e l'editor vedere [Architettura](architecture.md); per gli avvisi vedere [Accessibilità](accessibility.md).
+Technical reference separate from the README; values checked against current definitions in `inc/settings.php` and `inc/customizer.php`. See [Architecture](architecture.md) for integration boundaries and editor behavior, and [Accessibility](accessibility.md) for warnings.
 
-## Impostazioni globali
+## Global settings
 
-Le sezioni Colors, Typography, Widths and layout e Header utilizzano `theme_mod`. Identità del sito conserva i controlli nativi e le due opzioni di visibilità del tema. Registrazione: `githeme_customize_register()`; predefiniti: `githeme_defaults()`.
+The Colors, Typography, Widths and layout, and Header sections use `theme_mod`. Site Identity retains native controls and the theme's two visibility options. Registration: `githeme_customize_register()`; defaults: `githeme_defaults()`.
 
-| Impostazione | Predefinito | Valori consentiti |
+| Setting | Default | Allowed values |
 |---|---|---|
-| Primario | `#14569a` | Colore esadecimale |
-| Secondario | `#4b5563` | Colore esadecimale |
-| Testo | `#202833` | Colore esadecimale |
-| Sfondo | `#ffffff` | Colore esadecimale |
-| Link | `#14569a` | Colore esadecimale |
-| Sfondo header | `#ffffff` | Colore esadecimale |
-| Sfondo footer | `#ffffff` | Colore esadecimale |
-| Mostra titolo | Visibile | Booleano; sempre visibile senza logo |
-| Mostra motto | Nascosto sulle nuove attivazioni | Booleano indipendente dal logo |
-| Font | Stack di sistema | Sistema, Source Sans 3, Source Serif 4, Atkinson Hyperlegible Next |
-| Dimensione base | `1rem` | `1–1,375rem`, passo `0,0625` |
-| Scala titoli | `1,25` | `1,125`, `1,2`, `1,25`, `1,333` |
-| Larghezza contenuto | `46rem` | `36–60rem`, passo `1` |
-| Larghezza estesa | `68rem` | `48–90rem`, passo `1` |
-| Layout massimo | `76rem` | `60–100rem`, passo `1` |
-| Altezza massima logo | `5rem` | `2–8rem`, passo `0,25` |
-| Header | Identità a sinistra, menu a destra | In linea oppure identità centrata con menu sotto |
+| Primary | `#14569a` | Hex color |
+| Secondary | `#4b5563` | Hex color |
+| Text | `#202833` | Hex color |
+| Background | `#ffffff` | Hex color |
+| Link | `#14569a` | Hex color |
+| Header background | `#ffffff` | Hex color |
+| Footer background | `#ffffff` | Hex color |
+| Show title | Visible | Boolean; always visible without a logo |
+| Show tagline | Hidden on new activations | Boolean, independent of logo |
+| Font | System stack | System, Source Sans 3, Source Serif 4, Atkinson Hyperlegible Next |
+| Base font size | `1rem` | `1–1.375rem`, step `0.0625` |
+| Heading scale | `1.25` | `1.125`, `1.2`, `1.25`, `1.333` |
+| Content width | `46rem` | `36–60rem`, step `1` |
+| Wide width | `68rem` | `48–90rem`, step `1` |
+| Maximum layout | `76rem` | `60–100rem`, step `1` |
+| Maximum logo height | `5rem` | `2–8rem`, step `0.25` |
+| Header | Identity left, menu right | Inline, or centered identity with menu below |
 
-Le dimensioni restano relative alle preferenze del browser; lo zoom non è limitato. La scala dei titoli usa rapporti coerenti per tutti i livelli, condivisi con l'editor classico. Le larghezze sono massime, non dimensioni fisse: `contenuto ≤ estesa ≤ layout`. Gli elementi diretti del contenuto con classe `alignwide` o `alignfull` possono utilizzare rispettivamente la larghezza estesa o quella disponibile nel layout.
+Sizes remain relative to browser preferences; zoom is unrestricted. Heading scale uses consistent ratios across all levels, shared with the Classic Editor. Widths are maximums, not fixed dimensions: `content ≤ wide ≤ layout`. Direct content elements with `alignwide` or `alignfull` can use the wide width or available layout width respectively.
 
-Valori incoerenti delle larghezze generano errori di validazione nel Customizer, anche quando più impostazioni cambiano insieme. Valori preesistenti non validi sono limitati soltanto nel rendering, segnalati nella sezione e nella schermata Temi e **mai riscritti automaticamente**.
+Inconsistent width values trigger Customizer validation errors, including when multiple settings change together. Previously saved invalid values are bounded only during rendering, reported in the section and Themes screen, and **never rewritten automatically**.
 
-## Font ed editor classico
+## Fonts and Classic Editor
 
-I font WOFF2 sono locali e non modificati, con licenze SIL OFL 1.1 e provenienza documentata in [assets/fonts/SOURCES.md](../assets/fonts/SOURCES.md). Il tema dichiara solo le due varianti variabili, normale e corsiva, della famiglia selezionata: il browser scarica i file quando il contenuto li usa. Nessun preload forzato e nessun font caricato dal tema con lo stack di sistema. I plugin possono avere impostazioni font proprie, indipendenti dal tema.
+WOFF2 fonts are local and unmodified, with SIL OFL 1.1 licenses and provenance documented in [assets/fonts/SOURCES.md](../assets/fonts/SOURCES.md). The theme declares only the two variable faces, upright and italic, of the selected family; the browser downloads files as content needs them. There is no forced preload and no theme font loading for the system stack. Plugins can configure fonts independently.
 
-L'editor classico riceve famiglia, dimensione, scala, colori e larghezza tramite `tiny_mce_before_init` / `teeny_mce_before_init` e il foglio editor locale. Eventuali stili inline nei contenuti o impostazioni dei plugin possono prevalere.
+The Classic Editor receives family, size, scale, colors, and width through `tiny_mce_before_init` / `teeny_mce_before_init` and the local editor stylesheet. Inline content styles or plugin settings may take precedence.
 
-## Header, footer e identità
+## Header, footer, and identity
 
-Colors include sfondi indipendenti per header e footer, entrambi bianchi per impostazione
-predefinita (`githeme_color_header_background`, `githeme_color_footer_background`).
-Sono theme_mod validati come gli altri colori e diventano `--color-header-background`
-e `--color-footer-background`; il footer non usa più la superficie derivata dal secondario.
-La superficie derivata resta disponibile per hover e altri elementi. Testo e link
-continuano a usare la palette globale: il pannello informativo calcola separatamente
-anche i loro contrasti su header e footer, senza bloccare il salvataggio.
+Colors includes independent header and footer backgrounds, both white by default (`githeme_color_header_background`, `githeme_color_footer_background`). These are validated `theme_mod` values like other colors and become `--color-header-background` and `--color-footer-background`; the footer no longer uses the surface derived from the secondary color. That derived surface remains available for hover and other elements. Text and links continue to use the global palette: the informational panel also calculates their contrast against header and footer separately, without blocking saving.
 
-In Site Identity, «Show site title» e «Show tagline» sono indipendenti. Il titolo è
-visibile per default ed è sempre mostrato quando non c’è un logo; il motto è nascosto
-per default sulle nuove attivazioni. Una configurazione esistente con motto valorizzato
-mantiene il motto visibile: la sua scelta viene inizializzata una sola volta nelle
-impostazioni del tema durante l’amministrazione/attivazione, senza riscrivere blogname
-o blogdescription. Per nasconderlo occorre togliere la spunta e pubblicare; salvare un
-altro controllo non lo nasconde. Il valore esplicito salvato ha sempre precedenza.
-Un motto vuoto non produce un contenitore vuoto.
+In Site Identity, “Show site title” and “Show tagline” are independent. The title is visible by default and always shown when there is no logo; the tagline is hidden by default on new activations. An existing configuration with a nonempty tagline retains its visibility: the choice is initialized once in theme settings during administration/activation without rewriting `blogname` or `blogdescription`. To hide it, uncheck the option and publish; saving another control does not hide it. An explicitly stored value always takes precedence. An empty tagline produces no empty container.
 
-Il flag del motto viene inizializzato da `githeme_initialize_identity_visibility()` su `admin_init` e `after_switch_theme`; `githeme_initial_tagline_visibility()` distingue la nuova attivazione dalla configurazione preesistente. `githeme_identity_visible()` applica il fallback di lettura senza modificare titolo o motto.
+The tagline flag is initialized by `githeme_initialize_identity_visibility()` on `admin_init` and `after_switch_theme`; `githeme_initial_tagline_visibility()` distinguishes a new activation from an existing configuration. `githeme_identity_visible()` applies a read fallback without modifying title or tagline.
 
-## Configurazione essenziale
+## Basic setup
 
-1. Attivare githeme da Aspetto → Temi.
-2. Assegnare il menu alla posizione “Primary menu” e configurare eventualmente il logo in Identità del sito.
-3. Per una homepage statica scegliere una normale pagina nelle impostazioni di lettura.
-4. L'area “Footer” è facoltativa e configurabile tramite le normali API widget; l'ID stabile resta `footer-experimental`. Senza output dei widget non viene generata una fascia vuota né vengono aggiunti crediti automatici.
+1. Activate GiTheme under Appearance → Themes.
+2. Assign a menu to “Primary menu” and optionally configure a logo under Site Identity.
+3. For a static homepage, select a regular page in Reading settings.
+4. The “Footer” widget area is optional and configurable through standard widget APIs; its stable ID remains `footer-experimental`. Without widget output, no empty row or automatic credits are added.
 
-## Homepage statica e widget
+## Social menu
 
-1. Creare o scegliere una pagina pubblicata, con i contenuti nell’editor classico o, facoltativamente, con FX Builder.
-2. In Impostazioni → Lettura selezionare una pagina iniziale statica e assegnare quella pagina; scegliere eventualmente una pagina distinta per gli articoli.
-3. In Aspetto → Widget, oppure nelle aree widget del Customizer, aggiungere widget a **Homepage Hero** e/o **Homepage Content**.
+Besides “Primary menu”, GiTheme registers an optional “Social” location. Assign a menu under **Appearance → Menus** to show links in the footer. Recognized services automatically receive a local SVG icon and accessible label; unrecognized links retain their original text. The menu requires no frontend JavaScript. For supported services, the extension filter, and custom icons, see [Social menu](social-menu.md).
 
-L’ordine è header, Homepage Hero, contenuto della pagina, Homepage Content, footer. Le due aree sono indipendenti e opzionali: senza widget non producono contenitori vuoti. La homepage continua a mostrare il normale contenuto della pagina; il titolo del template è visibile per default e può essere nascosto con “Hide page title” nell’editor della singola pagina. Usare titoli di livello 2 per i widget e una gerarchia coerente nei loro contenuti.
+## Static homepage and widgets
 
-Hero dispone dell’intera larghezza della viewport; il widget decide il proprio layout interno. Homepage Content rispetta la larghezza massima del layout configurata nel tema. Colori, tipografia e larghezze continuano a usare le impostazioni globali. Contenuti di terze parti possono richiedere propri accorgimenti responsive.
+1. Create or choose a published page, with content in the Classic Editor or optionally FX Builder.
+2. Under Settings → Reading, choose a static homepage and assign that page; optionally select a separate posts page.
+3. Under Appearance → Widgets or the Customizer's widget areas, add widgets to **Homepage Hero** and/or **Homepage Content**.
 
-Gli ID stabili delle aree sono `homepage-hero` e `homepage-content`. Funzionano tramite `register_sidebar()` e `dynamic_sidebar()`, senza API specifiche dei plugin. Non appaiono nella homepage con gli ultimi articoli, nella pagina separata degli articoli, nelle pagine interne o negli articoli singoli.
+The order is header, Homepage Hero, page content, Homepage Content, footer. Both areas are independent and optional: without widgets, they create no empty containers. The homepage still displays normal page content; its template title is visible by default and can be hidden with “Hide page title” in the individual page editor. Use level-two widget headings and a consistent content hierarchy.
 
-Non viene aggiunto `front-page.php`: restano valide la gerarchia nativa e i template assegnati alle pagine che utilizzano header e footer standard del tema. Template esterni che sostituiscono completamente header/footer devono gestire autonomamente il rendering. Non sono introdotti ordinamenti proprietari, nuove opzioni Customizer o sistemi di sezioni.
+Hero spans the viewport width; the widget determines its own internal layout. Homepage Content respects the theme's configured maximum layout width. Colors, typography, and widths still use global settings. Third-party content may require its own responsive adjustments.
 
-## Funzionalità introdotte in 0.5.0
+Stable area IDs are `homepage-hero` and `homepage-content`. They use `register_sidebar()` and `dynamic_sidebar()`, without plugin-specific APIs. They do not appear on the latest-posts homepage, separate posts page, internal pages, or single posts.
 
-Il [README](../README.md) descrive i widget nativi GiTheme – Featured Posts e GiTheme – Gallery Slider, le modalità di selezione, gli archivi di categoria a 12 articoli per pagina e lo shortcode `[gallery layout="slider"]`. I widget riutilizzano card e gallerie esistenti, senza opzioni estetiche aggiuntive. Le righe Default di FX Builder possono usare `githeme-wide` per raggiungere `--width-layout`; non cambia la larghezza `--width-wide` né il rendering Full Width del plugin.
+No `front-page.php` is added: native hierarchy and assigned page templates using the theme's standard header and footer remain valid. External templates that replace the entire header/footer must handle rendering themselves. No proprietary ordering, new Customizer options, or section systems are introduced.
 
-“Hide page title” usa il post meta `_githeme_hide_page_title` soltanto sulle pagine. Non altera titolo salvato, document title o heading del contenuto; autosave e revisioni non riscrivono la preferenza. La tipografia editoriale responsive e i margini condivisi con il Classic Editor rispettano la dimensione base e la scala configurate, senza cambiare i livelli semantici.
+## Widgets, archives, and page titles
+
+The [README](../README.md) describes the native GiTheme – Featured Posts and GiTheme – Gallery Slider widgets, selection modes, category archives with 12 posts per page, and `[gallery layout="slider"]` shortcode. Widgets reuse existing cards and galleries without additional visual options. FX Builder Default rows can use `githeme-wide` to reach `--width-layout`; this does not change `--width-wide` or the plugin's Full Width rendering.
+
+“Hide page title” uses the `_githeme_hide_page_title` post meta only for pages. It does not change the saved title, document title, or content headings; autosaves and revisions do not rewrite the preference. Responsive editorial typography and margins shared with the Classic Editor respect configured base size and scale without changing semantic heading levels.
