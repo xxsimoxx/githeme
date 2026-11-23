@@ -13,6 +13,10 @@ msgstr ""
 "X-Generator: WP-CLI 2.11.0\n"
 "X-Domain: githeme\n"
 
+#: inc/setup.php inc/social-menu.php
+msgid "Social"
+msgstr ""
+
 #. Theme Name of the theme
 #: style.css
 msgid "GiTheme"

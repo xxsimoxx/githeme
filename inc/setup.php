@@ -13,7 +13,12 @@ function githeme_setup() {
 	add_theme_support( 'automatic-feed-links' );
 	add_theme_support( 'post-thumbnails' );
 	add_theme_support( 'custom-logo', array( 'flex-width' => true, 'flex-height' => true ) );
-	register_nav_menus( array( 'primary' => __( 'Primary menu', 'githeme' ) ) );
+	register_nav_menus(
+		array(
+			'primary' => __( 'Primary menu', 'githeme' ),
+			'social'  => __( 'Social', 'githeme' ),
+		)
+	);
 	add_editor_style( add_query_arg( 'ver', wp_get_theme( get_template() )->get( 'Version' ), get_template_directory_uri() . '/assets/css/editor.css' ) );
 }
 add_action( 'after_setup_theme', 'githeme_setup' );

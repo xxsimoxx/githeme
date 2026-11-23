@@ -1,0 +1,1 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="false" focusable="true" onload="alert(1)"><script>alert(1)</script><image href="https://example.test/remote.png"/><path onclick="alert(1)" style="fill:red" fill="url(https://example.test/remote.svg)" d="M0 0h24v24H0z"/></svg>

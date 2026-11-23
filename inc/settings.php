@@ -342,6 +342,8 @@ function githeme_custom_properties_css() {
 		'color-navigation-submenu-focus' => githeme_navigation_focus_color( $colors['primary'], $colors['background'] ),
 		'color-header-background' => $colors['header_background'],
 		'color-footer-background' => $colors['footer_background'],
+		'color-social-link' => githeme_contrast_ratio( $colors['link'], $colors['footer_background'] ) >= githeme_contrast_rules()['normalTextMinimum'] ? $colors['link'] : githeme_button_text_color( $colors['footer_background'] ),
+		'color-social-focus' => githeme_navigation_focus_color( $colors['primary'], $colors['footer_background'] ),
 		'color-button-text' => githeme_button_text_color( $colors['primary'] ),
 		'color-button-hover-text' => githeme_button_text_color( $colors['secondary'] ),
 		'color-surface'    => githeme_mix_colors( $colors['secondary'], $colors['background'], 0.06 ),

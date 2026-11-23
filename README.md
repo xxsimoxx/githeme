@@ -46,6 +46,18 @@ Both areas are optional and appear only on the static front page—not on the la
 
 A native **Text** widget can also contain a [gallery slider](#native-gallery-slider), including in Homepage Hero.
 
+## Social links menu
+
+Create a native menu under **Appearance → Menus**, add custom links, and assign it to **Social**. It appears in its own wrapping footer row, with or without footer widgets. Unassigned or empty menus add no footer content.
+
+Recognized links use local SVG icons; the menu label remains the accessible link name. Other links keep their visible text. Native order, nested items, link targets, and link attributes are preserved. No JavaScript or Customizer option is required.
+
+Supported services are Facebook, Instagram, LinkedIn, YouTube, X/Twitter, Threads, TikTok, Pinterest, Mastodon, WhatsApp, Telegram, GitHub, WordPress, Vimeo, Spotify, Behance, email (`mailto:`), telephone (`tel:`), and Google Maps. Matching uses parsed HTTP/HTTPS hostnames, not text found in a URL or rendered HTML. Google Maps includes `maps.app.goo.gl`, `maps.google.com`, `google.com/maps`, `www.google.com/maps`, and `goo.gl/maps`; unrelated Google URLs remain text links.
+
+Mastodon instances recognized by default are `mastodon.social`, `mastodon.online`, `mstdn.social`, `mas.to`, `fosstodon.org`, and `hachyderm.io`. Additional instances and services can be added with `githeme_social_links_icons`. Each service rule contains `hosts` (exact lowercase hostnames without `www.`), `icon` (a local SVG basename), and optionally `path_prefix` (case-sensitive, on a path-segment boundary). A child theme can provide SVG files under `assets/icons/social/`; missing icons keep the text label. No remote service discovery is performed.
+
+Social link colors use the configured footer background and link color, falling back to the existing contrasting foreground helper when necessary. Focus uses the theme's contrasting outline calculation. Icons follow `currentColor`; Google Maps uses a generic location pin. Text fallback links have no underline inside Social; hover and keyboard focus remain visible. See the [Social menu developer guide](docs/social-menu.md) for filter examples, child-theme icons and Customizer preview limitations.
+
 ## Featured Posts widget
 
 Add **GiTheme – Featured Posts** through **Appearance → Widgets** to Homepage Hero, Homepage Content, Footer, or another registered widget area. It reuses the category archive cards and adapts to the available width, with up to three columns. No plugin is required.
@@ -117,3 +129,5 @@ Accessibility is a continuing design and testing goal, not a claim of WCAG certi
 ## License
 
 `githeme` is licensed under **GPL-3.0-or-later**. See [LICENSE](LICENSE). Bundled fonts retain their respective **SIL Open Font License 1.1** terms; their licenses and provenance are included with the font files.
+
+Social menu icons are **Font Awesome Free 7.1.0**, by Fonticons, Inc., licensed under **CC BY 4.0**. See [icon attribution and license](assets/icons/social/README.md). No Font Awesome font or external service is loaded.
