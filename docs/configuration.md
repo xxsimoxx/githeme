@@ -30,6 +30,57 @@ Sizes remain relative to browser preferences; zoom is unrestricted. Heading scal
 
 Inconsistent width values trigger Customizer validation errors, including when multiple settings change together. Previously saved invalid values are bounded only during rendering, reported in the section and Themes screen, and **never rewritten automatically**.
 
+## Public CSS custom properties
+
+GiTheme exposes **24 public CSS custom properties** for colors, typography, and layout. They are intended for child themes, custom CSS, and third-party integrations. Their names and meanings form the theme's supported CSS interface; component-specific and internal properties are implementation details and may change between releases.
+
+`githeme_custom_properties_css()` generates these values from validated theme settings and publishes them on `:root`. They also reach the Classic Editor through `content_style`. The Customizer remains the source of truth: use these properties rather than duplicating `theme_mod` values or palette calculations.
+
+| Property | Value and intended use |
+|---|---|
+| `--color-primary` | Customizer primary color; theme accents and primary actions. |
+| `--color-secondary` | Customizer secondary color; secondary accents and hover states. |
+| `--color-text` | Global text color. |
+| `--color-background` | Global background color. |
+| `--color-link` | Global link color. |
+| `--color-header-background` | Independent header background color. |
+| `--color-footer-background` | Independent footer background color. |
+| `--color-surface` | Subtle surface color, derived by blending 6% secondary with 94% background. |
+| `--color-muted` | Secondary text color, derived from text and background; falls back to text if its contrast is insufficient. |
+| `--color-border` | Border color derived from text and background. |
+| `--color-button-text` | Automatically selected black or white text for the primary button background. |
+| `--color-button-hover-text` | Automatically selected black or white text for the secondary button/hover background. |
+| `--font-body` | Selected font-family stack, including the system stack option. |
+| `--font-size-base` | Configured base font size, expressed in `rem`. |
+| `--heading-scale` | Unitless heading scale ratio. |
+| `--heading-1` … `--heading-6` | Six **unitless scale factors**, not font sizes; `--heading-6` equals `1`, and each preceding level applies another heading-scale step. |
+| `--width-content` | Maximum editorial content width in `rem`. |
+| `--width-wide` | Maximum width for wide content in `rem`. |
+| `--width-layout` | Maximum overall layout width in `rem`. |
+
+Widths are maximums rather than fixed dimensions and satisfy `content ≤ wide ≤ layout` after rendering safeguards. Heading factors must be combined with a length, for example `calc(var(--font-size-base) * var(--heading-3))`; using `var(--heading-3)` alone as `font-size` would be invalid.
+
+Example for a custom component:
+
+```css
+.custom-card {
+    max-width: var(--width-content);
+    padding: 1rem;
+    background: var(--color-surface);
+    color: var(--color-text);
+    border: 1px solid var(--color-border);
+}
+
+.custom-card h3 {
+    font-family: var(--font-body);
+    font-size: calc(var(--font-size-base) * var(--heading-3));
+}
+```
+
+**Component-specific generated properties** are available but are *not* part of this general-purpose public interface: `--color-navigation-focus`, `--color-navigation-submenu-focus`, `--color-social-link`, `--color-social-focus`, `--color-header-muted`, and `--logo-max-height`. They implement particular theme components, including context-dependent contrast decisions, and may change as those components evolve.
+
+**Internal implementation properties** such as `--submenu-offset`, `--with-sidebar`, `--space`, `--githeme-prose-h1` … `--githeme-prose-h3`, `--githeme-heading-after`, and `--githeme-gallery-*` are not supported extension points. Their presence in stylesheets does not make them a stable API. The public list above does not include variables owned by plugins or the ClassicPress admin interface.
+
 ## Fonts and Classic Editor
 
 WOFF2 fonts are local and unmodified, with SIL OFL 1.1 licenses and provenance documented in [assets/fonts/SOURCES.md](../assets/fonts/SOURCES.md). The theme declares only the two variable faces, upright and italic, of the selected family; the browser downloads files as content needs them. There is no forced preload and no theme font loading for the system stack. Plugins can configure fonts independently.

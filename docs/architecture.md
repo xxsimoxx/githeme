@@ -27,17 +27,11 @@ There is no `front-page.php` or `home.php`: native template hierarchy applies. A
 
 ## CSS and variables
 
-`githeme_custom_properties_css()` generates properties from validated values, without accepting arbitrary CSS strings from controls. `githeme_rendered_widths()` applies defensive bounds without rewriting stored values. CSS Grid, Flexbox, and relative units keep the layout responsive.
+`githeme_custom_properties_css()` generates `:root` properties from validated settings without accepting arbitrary CSS strings from controls. `githeme_rendered_widths()` applies defensive bounds without rewriting stored values. CSS Grid, Flexbox, and relative units keep the layout responsive.
 
-| Variables | Source |
-|---|---|
-| `--color-primary`, `--color-secondary`, `--color-text`, `--color-background`, `--color-link` | Customizer palette. |
-| `--color-header-background`, `--color-footer-background` | Independent Customizer backgrounds. |
-| `--color-button-text`, `--color-button-hover-text` | Better-contrast black/white on primary and secondary. |
-| `--color-surface`, `--color-muted`, `--color-border` | Derived palette variants, without a separate palette. |
-| `--font-body`, `--font-size-base`, `--heading-scale`, `--heading-1` … `--heading-6` | Selected font and heading scale. |
-| `--width-content`, `--width-wide`, `--width-layout` | Validated and rendering-bounded widths. |
-| `--logo-max-height` | Configured maximum logo height. |
+The **24 supported public CSS properties** cover the global palette, derived colors, typography, and maximum layout widths. Their complete reference, examples, and compatibility boundary are in [Configuration — Public CSS custom properties](configuration.md#public-css-custom-properties).
+
+Other generated properties, including navigation and social focus colors, header-muted text, and logo height, are component-specific rather than a general-purpose public API. Stylesheet-local variables used by menus, prose, galleries, and layout are implementation details.
 
 The derived surface blends secondary and background (6%/94%). The footer uses its independent color instead. Muted text blends text/background and falls back to the original text color if the blend fails the normal-text threshold; this cannot fix an insufficient original palette.
 

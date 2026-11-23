@@ -30,6 +30,57 @@ Le dimensioni restano relative alle preferenze del browser; lo zoom non è limit
 
 Valori incoerenti delle larghezze generano errori di validazione nel Customizer, anche quando più impostazioni cambiano insieme. Valori preesistenti non validi sono limitati soltanto nel rendering, segnalati nella sezione e nella schermata Temi e **mai riscritti automaticamente**.
 
+## Proprietà CSS personalizzate pubbliche
+
+GiTheme espone **24 proprietà CSS personalizzate pubbliche** per colori, tipografia e layout. Sono destinate a child theme, CSS personalizzato e integrazioni di terze parti. Nomi e significato costituiscono l'interfaccia CSS supportata dal tema; le proprietà specifiche dei componenti e quelle interne sono dettagli implementativi e possono cambiare tra le versioni.
+
+`githeme_custom_properties_css()` genera i valori dalle impostazioni validate del tema e li dichiara su `:root`. Le proprietà sono disponibili anche nell'editor classico tramite `content_style`. Il Customizer resta la fonte delle impostazioni: è preferibile utilizzare queste proprietà anziché duplicare valori `theme_mod` o calcoli della palette.
+
+| Proprietà | Valore e utilizzo previsto |
+|---|---|
+| `--color-primary` | Colore primario del Customizer; accenti e azioni principali. |
+| `--color-secondary` | Colore secondario del Customizer; accenti secondari e stati hover. |
+| `--color-text` | Colore globale del testo. |
+| `--color-background` | Colore globale dello sfondo. |
+| `--color-link` | Colore globale dei link. |
+| `--color-header-background` | Colore indipendente dello sfondo dell'header. |
+| `--color-footer-background` | Colore indipendente dello sfondo del footer. |
+| `--color-surface` | Superficie tenue derivata dalla miscela 6% secondario e 94% sfondo. |
+| `--color-muted` | Testo secondario derivato da testo e sfondo; torna al colore del testo se il contrasto è insufficiente. |
+| `--color-border` | Colore dei bordi derivato da testo e sfondo. |
+| `--color-button-text` | Testo bianco o nero scelto automaticamente sullo sfondo primario dei pulsanti. |
+| `--color-button-hover-text` | Testo bianco o nero scelto automaticamente sullo sfondo secondario/hover dei pulsanti. |
+| `--font-body` | Stack della famiglia tipografica selezionata, compresa l'opzione di sistema. |
+| `--font-size-base` | Dimensione base configurata, espressa in `rem`. |
+| `--heading-scale` | Rapporto della scala dei titoli, senza unità. |
+| `--heading-1` … `--heading-6` | Sei **fattori di scala senza unità**, non dimensioni del font; `--heading-6` vale `1` e ogni livello precedente applica un ulteriore passo della scala. |
+| `--width-content` | Larghezza massima dei contenuti editoriali in `rem`. |
+| `--width-wide` | Larghezza massima dei contenuti estesi in `rem`. |
+| `--width-layout` | Larghezza massima del layout complessivo in `rem`. |
+
+Le larghezze sono massime e non fisse; dopo le protezioni applicate al rendering rispettano `contenuto ≤ estesa ≤ layout`. I fattori dei titoli devono essere combinati con una lunghezza, ad esempio `calc(var(--font-size-base) * var(--heading-3))`: usare soltanto `var(--heading-3)` come `font-size` non è valido.
+
+Esempio per un componente personalizzato:
+
+```css
+.custom-card {
+    max-width: var(--width-content);
+    padding: 1rem;
+    background: var(--color-surface);
+    color: var(--color-text);
+    border: 1px solid var(--color-border);
+}
+
+.custom-card h3 {
+    font-family: var(--font-body);
+    font-size: calc(var(--font-size-base) * var(--heading-3));
+}
+```
+
+Le **proprietà generate specifiche dei componenti** sono disponibili ma *non* fanno parte di questa interfaccia pubblica generale: `--color-navigation-focus`, `--color-navigation-submenu-focus`, `--color-social-link`, `--color-social-focus`, `--color-header-muted` e `--logo-max-height`. Implementano componenti particolari del tema, anche con scelte di contrasto dipendenti dal contesto, e possono cambiare insieme ai componenti.
+
+Le **proprietà interne** come `--submenu-offset`, `--with-sidebar`, `--space`, `--githeme-prose-h1` … `--githeme-prose-h3`, `--githeme-heading-after` e `--githeme-gallery-*` non sono punti di estensione supportati. La loro presenza nei fogli di stile non le rende un'API stabile. L'elenco pubblico non comprende le variabili dei plugin o dell'interfaccia di amministrazione di ClassicPress.
+
 ## Font ed editor classico
 
 I font WOFF2 sono locali e non modificati, con licenze SIL OFL 1.1 e provenienza documentata in [assets/fonts/SOURCES.md](../../assets/fonts/SOURCES.md). Il tema dichiara solo le due varianti variabili, normale e corsiva, della famiglia selezionata: il browser scarica i file quando il contenuto li usa. Nessun preload forzato e nessun font caricato dal tema con lo stack di sistema. I plugin possono avere impostazioni font proprie, indipendenti dal tema.

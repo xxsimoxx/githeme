@@ -27,17 +27,11 @@ Non esistono `front-page.php` o `home.php`: resta valida la gerarchia nativa. La
 
 ## CSS e variabili
 
-`githeme_custom_properties_css()` genera proprietà da valori validati, senza utilizzare stringhe CSS arbitrarie provenienti dai controlli. `githeme_rendered_widths()` applica limiti difensivi senza riscrivere valori salvati. CSS Grid, Flexbox e dimensioni relative mantengono il layout responsive.
+`githeme_custom_properties_css()` genera proprietà su `:root` da valori validati, senza utilizzare stringhe CSS arbitrarie provenienti dai controlli. `githeme_rendered_widths()` applica limiti difensivi senza riscrivere i valori salvati. CSS Grid, Flexbox e dimensioni relative mantengono il layout responsive.
 
-| Variabili | Origine |
-|---|---|
-| `--color-primary`, `--color-secondary`, `--color-text`, `--color-background`, `--color-link` | Palette del Customizer. |
-| `--color-header-background`, `--color-footer-background` | Sfondi indipendenti del Customizer. |
-| `--color-button-text`, `--color-button-hover-text` | Bianco/nero a contrasto migliore su primario e secondario. |
-| `--color-surface`, `--color-muted`, `--color-border` | Varianti calcolate dalla palette, senza seconda palette autonoma. |
-| `--font-body`, `--font-size-base`, `--heading-scale`, `--heading-1` … `--heading-6` | Font e scala selezionati. |
-| `--width-content`, `--width-wide`, `--width-layout` | Larghezze validate e limitate per il rendering. |
-| `--logo-max-height` | Altezza massima configurata del logo. |
+Le **24 proprietà CSS pubbliche supportate** comprendono palette globale, colori derivati, tipografia e larghezze massime del layout. Il riferimento completo, gli esempi e i confini di compatibilità sono in [Configurazione — Proprietà CSS personalizzate pubbliche](configuration.md#proprietà-css-personalizzate-pubbliche).
+
+Le altre proprietà generate, tra cui colori del focus di navigazione e menu Social, testo attenuato dell'header e altezza del logo, sono specifiche dei componenti e non costituiscono un'API pubblica generale. Le variabili locali dei fogli di stile per menu, testi editoriali, gallerie e layout sono dettagli implementativi.
 
 La superficie derivata usa secondario e sfondo (6%/94%). Il footer utilizza invece il proprio colore indipendente. Il testo attenuato usa una miscela testo/sfondo e torna al testo originale se la miscela non raggiunge la soglia normale; ciò non corregge una palette originale insufficiente.
 
