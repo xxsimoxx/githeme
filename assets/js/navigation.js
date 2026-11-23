@@ -5,7 +5,7 @@
 	const navigation = document.querySelector('.primary-navigation');
 	if (!navigation) return;
 	const toggle = navigation.querySelector('.menu-toggle');
-	const menu = navigation.querySelector('#primary-menu');
+	let menu = navigation.querySelector('#primary-menu');
 	const header = navigation.closest('.header-inner');
 	const branding = header?.querySelector('.site-branding');
 	if (!toggle || !menu || !header || !branding) return;
@@ -111,12 +111,23 @@
 	};
 	mobile.addEventListener('change', schedule);
 	window.addEventListener('resize', schedule);
+	let observer;
 	if ('ResizeObserver' in window) {
-		const observer = new ResizeObserver(schedule);
+		observer = new ResizeObserver(schedule);
 		observer.observe(header);
 		observer.observe(branding);
 		observer.observe(menu);
 	}
+	// Selective Refresh replaces the list, while the navigation and its handlers remain.
+	window.wp?.customize?.selectiveRefresh?.bind('partial-content-rendered', () => {
+		const replacement = navigation.querySelector('#primary-menu');
+		if (!replacement || replacement === menu) return;
+		observer?.unobserve(menu);
+		menu = replacement;
+		observer?.observe(menu);
+		toggle.setAttribute('aria-controls', menu.id);
+		synchronize();
+	});
 	// Theme layout classes and inherited font variables can change while the
 	// menu is hidden, when no menu resize notification is possible.
 	const attributes = new MutationObserver(schedule);
